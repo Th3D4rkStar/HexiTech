@@ -1,5 +1,3 @@
-using System;
-
 namespace HexiTech.Models
 {
     public class ErrorViewModel
