@@ -1,4 +1,5 @@
 ﻿using HexiTech.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HexiTech.Data
 {
@@ -12,15 +13,14 @@ namespace HexiTech.Data
         {
         }
 
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<ProductType> ProductTypes { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder
+            optionsBuilder
                     .UseSqlServer(DatabaseConfiguration.ConnectionString);
-            }
-
-            base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

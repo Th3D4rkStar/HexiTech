@@ -1,5 +1,6 @@
 ﻿namespace HexiTech.Data.Models
 {
+    using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel.DataAnnotations;
     using static DataConstants.Product;
 
@@ -8,17 +9,18 @@
         public int Id { get; init; }
 
         [Required]
-        [MinLength(BrandMinLength)]
-        [MaxLength(BrandMaxLength)]
+        [StringLength(BrandMaxLength, MinimumLength = BrandMinLength)]
         public string Brand { get; set; }
 
-        [MaxLength(SeriesMaxLength)]
+        [StringLength(SeriesMaxLength)]
         public string Series { get; set; }
 
         [Required]
-        [MinLength(ModelMinLength)]
-        [MaxLength(ModelMaxLength)]
+        [StringLength(ModelMaxLength, MinimumLength = ModelMinLength)]
         public string Model { get; set; }
+
+        [Required]
+        public string ImageUrl { get; set; }
 
         [Required]
         public int ProductTypeId { get; set; }
@@ -31,13 +33,14 @@
         public Category Category { get; set; }
 
         [Required]
+        [Column(TypeName = "decimal(6,2)")]
         public decimal Price { get; set; }
 
         [Required]
         public ProductAvailability Availability { get; set; }
 
         [Required]
-        [MinLength(DescriptionMinLength)]
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
         public string Description { get; set; }
 
         public string Specifications { get; set; }

@@ -34,7 +34,7 @@ namespace HexiTech
             services.AddControllersWithViews();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HexiTechDbContext db)
         {
             if (env.IsDevelopment())
             {
@@ -46,6 +46,10 @@ namespace HexiTech
                 app.UseExceptionHandler("/Home/Error")
                     .UseHsts();
             }
+
+            //TODO: Change when app is ready.
+            //db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
 
             app.UseHttpsRedirection()
                 .UseStaticFiles()

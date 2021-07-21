@@ -12,6 +12,7 @@
             public const int ModelMinLength = 2;
             public const int ModelMaxLength = 15;
 
+            public const int DescriptionMaxLength = 5000;
             public const int DescriptionMinLength = 10;
         }
 
