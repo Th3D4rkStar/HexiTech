@@ -1,4 +1,5 @@
-﻿@model HexiTech.Models.Products.AddProductFormModel
+﻿@using HexiTech.Data.Models
+@model HexiTech.Models.Products.AddProductFormModel
 
 @{
     ViewBag.Title = "Add new product.";
@@ -21,16 +22,18 @@
                                 <option value="@category.Id">@category.Name</option>
                             }*@
                     </select>
+                    <span asp-validation-for="CategoryId" class="small text-danger"></span>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="productType">Type</label>
-                    <select id="productType" class="form-control">
+                    <label asp-for="ProductTypeId">Type</label>
+                    <select asp-for="ProductTypeId" class="form-control">
                         <option selected>Choose...</option>
                         @*@foreach (var productType in Model.ProductTypes)
                             {
                                 <option value="@productType.Id">@productType.Name</option>
                             }*@
                     </select>
+                    <span asp-validation-for="ProductTypeId" class="small text-danger"></span>
                 </div>
             </div>
             <div class="form-row">
@@ -73,22 +76,24 @@
                     <label class="col-sm-2">Availability:</label>
                     <div class="col-sm-10">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="productAvailable" value="available">
-                            <label class="form-check-label" for="productAvailable">Available.</label>
+                            <input class="form-check-input" type="radio" asp-for="Availability" name="Availability" value="1">
+                            <label class="form-check-label" asp-for="Availability">Available.</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="productAtWarehouse" value="atWarehouse">
-                            <label class="form-check-label" for="productAtWarehouse">At warehouse.</label>
+                            <input class="form-check-input" type="radio" asp-for="Availability" name="Availability" value="2">
+                            <label class="form-check-label" asp-for="Availability">At warehouse.</label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="productOutOfStock" value="outOfStock">
-                            <label class="form-check-label" for="productOutOfStock">Out of stock.</label>
+                            <input class="form-check-input" type="radio" asp-for="Availability" name="Availability" value="3">
+                            <label class="form-check-label" asp-for="Availability">Out of stock.</label>
                         </div>
+                        <span asp-validation-for="Availability" class="small text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="productPrice">Price</label>
-                    <input type="number" class="form-control" id="productPrice" placeholder="$439.99...">
+                    <label asp-for="Price">Price</label>
+                    <input type="number" class="form-control" asp-for="Price" placeholder="$439.99...">
+                    <span asp-validation-for="Price" class="small text-danger"></span>
                 </div>
             </div>
             <div class="form-group">

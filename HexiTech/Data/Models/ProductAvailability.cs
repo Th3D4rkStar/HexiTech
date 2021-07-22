@@ -2,8 +2,8 @@
 {
     public enum ProductAvailability
     {
-        Available,
-        AtWarehouse,
-        OutOfStock
+        Available = 1,
+        AtWarehouse = 2,
+        OutOfStock = 3
     }
 }
