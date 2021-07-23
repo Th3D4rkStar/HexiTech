@@ -1,6 +1,5 @@
 namespace HexiTech
 {
-    using Data;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
@@ -8,6 +7,8 @@ namespace HexiTech
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Data;
+    using Services;
 
     public class Startup
     {
@@ -32,6 +33,8 @@ namespace HexiTech
                 .AddEntityFrameworkStores<HexiTechDbContext>();
 
             services.AddControllersWithViews();
+
+            services.AddTransient<IProductService, ProductService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HexiTechDbContext db)

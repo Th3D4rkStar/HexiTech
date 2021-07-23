@@ -1,27 +1,42 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HexiTech.Models.Products;
-
-namespace HexiTech.Controllers
+﻿namespace HexiTech.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+    using System.Linq;
     using Data;
+    using Models.Products;
+    using Services;
 
     public class ProductsController : Controller
     {
+        private readonly IProductService products;
         private readonly HexiTechDbContext db;
 
-        public ProductsController(HexiTechDbContext db)
+        public ProductsController(IProductService products, HexiTechDbContext db)
         {
+            this.products = products;
             this.db = db;
         }
 
         // GET: ProductsController
-        public ActionResult All()
+        public ActionResult All([FromQuery] AllProductsQueryModel query)
         {
-            return View();
+            var queryResult = this.products.All(
+                query.Brand,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                AllProductsQueryModel.ProductsPerPage);
+
+            var productBrands = this.products.AllProductBrands();
+
+            query.Brands = productBrands;
+            query.TotalProducts = queryResult.TotalProducts;
+            query.Products = queryResult.Products;
+
+            return View(query);
         }
 
         // GET: ProductsController/Details/5
@@ -34,7 +49,10 @@ namespace HexiTech.Controllers
         [Authorize]
         public ActionResult Add()
         {
-            return View();
+            return View(new AddProductFormModel
+            {
+                Categories = this.GetProductCategories()
+            });
         }
 
         // POST: ProductsController/Add
@@ -50,7 +68,7 @@ namespace HexiTech.Controllers
 
             if (!ModelState.IsValid)
             {
-                product.Categories = this.GetCarCategories();
+                product.Categories = this.GetProductCategories();
 
                 return View(product);
             }
@@ -65,7 +83,7 @@ namespace HexiTech.Controllers
             }
         }
 
-        private IEnumerable<ProductCategoryViewModel> GetCarCategories()
+        private IEnumerable<ProductCategoryViewModel> GetProductCategories()
             => this.db
                 .Categories
                 .Select(c => new ProductCategoryViewModel()

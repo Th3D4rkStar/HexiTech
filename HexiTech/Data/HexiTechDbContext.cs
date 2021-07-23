@@ -1,10 +1,8 @@
-﻿using HexiTech.Data.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace HexiTech.Data
+﻿namespace HexiTech.Data
 {
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Models;
 
     public class HexiTechDbContext : IdentityDbContext
     {
