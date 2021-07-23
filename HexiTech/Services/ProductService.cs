@@ -33,7 +33,7 @@
             {
                 ProductSorting.Price => productsQuery.OrderByDescending(p => p.Price),
                 ProductSorting.BrandAndModel => productsQuery.OrderBy(p => p.Brand).ThenBy(p => p.Model),
-                ProductSorting.DateCreated or _ => productsQuery.OrderByDescending(p => p.Id)
+                ProductSorting.DateAdded or _ => productsQuery.OrderByDescending(p => p.Id)
             };
 
             var totalProducts = productsQuery.Count();
