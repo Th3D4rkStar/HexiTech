@@ -51,7 +51,8 @@
         {
             return View(new AddProductFormModel
             {
-                Categories = this.GetProductCategories()
+                Categories = this.GetProductCategories(),
+                ProductTypes = this.GetProductTypes()
             });
         }
 
@@ -90,6 +91,18 @@
                 {
                     Id = c.Id,
                     Name = c.Name
+                })
+                .ToList();
+
+        private IEnumerable<ProductTypeViewModel> GetProductTypes()
+            => this.db
+                .ProductTypes
+                .Select(pt => new ProductTypeViewModel()
+                {
+                    Id = pt.Id,
+                    Name = pt.Name,
+                    CategoryId = pt.CategoryId,
+                    Category = pt.Category
                 })
                 .ToList();
 

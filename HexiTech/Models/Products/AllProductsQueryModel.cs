@@ -1,5 +1,6 @@
 ﻿namespace HexiTech.Models.Products
 {
+    using System.ComponentModel.DataAnnotations;
     using System.Collections.Generic;
     using Services;
 
@@ -20,5 +21,15 @@
         public IEnumerable<string> Brands { get; set; }
 
         public IEnumerable<ProductServiceModel> Products { get; set; }
+
+        [Display(Name = "Category")]
+        public int CategoryId { get; init; }
+
+        public IEnumerable<ProductCategoryViewModel> Categories { get; set; } = new List<ProductCategoryViewModel>();
+
+        [Display(Name = "ProductType")]
+        public int ProductTypeId { get; init; }
+
+        public IEnumerable<ProductTypeViewModel> ProductTypes { get; set; } = new List<ProductTypeViewModel>();
     }
 }

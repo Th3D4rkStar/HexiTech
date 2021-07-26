@@ -52,7 +52,7 @@ namespace HexiTech
 
             //TODO: Change when app is ready.
             //db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
+            //db.Database.EnsureCreated();
 
             app.UseHttpsRedirection()
                 .UseStaticFiles()
