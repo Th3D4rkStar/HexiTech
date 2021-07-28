@@ -1,10 +1,10 @@
-﻿using HexiTech.Data.Models;
-
-namespace HexiTech.Services
+﻿namespace HexiTech.Services.Products
 {
     using System.Collections.Generic;
     using System.Linq;
     using Data;
+    using HexiTech.Data.Models;
+    using HexiTech.Models;
     using Models;
 
     public class ProductService : IProductService
@@ -47,10 +47,12 @@ namespace HexiTech.Services
                 {
                     Id = p.Id,
                     Brand = p.Brand,
+                    Series = p.Series,
                     Model = p.Model,
                     Price = p.Price,
                     ImageUrl = p.ImageUrl,
-                    Category = p.Category.Name
+                    ProductTypeName = p.ProductType.Name,
+                    CategoryName = p.Category.Name
                 })
                 .ToList();
 

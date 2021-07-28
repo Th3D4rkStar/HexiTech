@@ -8,7 +8,7 @@ namespace HexiTech
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Data;
-    using Services;
+    using Services.Products;
 
     public class Startup
     {

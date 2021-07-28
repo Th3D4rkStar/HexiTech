@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.Collections.Generic;
-    using Services;
+    using HexiTech.Services.Products.Models;
 
     public class AllProductsQueryModel
     {

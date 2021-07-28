@@ -1,7 +1,5 @@
-﻿namespace HexiTech.Services
+﻿namespace HexiTech.Services.Products.Models
 {
-    using HexiTech.Data.Models;
-
     public class ProductServiceModel
     {
         public int Id { get; init; }
@@ -16,13 +14,8 @@
 
         public decimal Price { get; set; }
 
-        public ProductAvailability Availability { get; set; }
+        public string ProductTypeName { get; set; }
 
-        public string ProductType { get; set; }
-
-        public string Category { get; set; }
-
-        public string Description { get; set; }
-        public string Specifications { get; set; }
+        public string CategoryName { get; set; }
     }
 }

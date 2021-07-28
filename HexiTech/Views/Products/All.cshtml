@@ -118,12 +118,39 @@
     {
         <div class="col-md-4">
             <div class="card mb-3">
-                <img class="card-img-top" src="@product.ImageUrl" alt="@product.Brand @product.Model - @product.Price (@product.Category @product.ProductType)">
+                <img class="card-img-top" src="@product.ImageUrl" alt="@product.Brand @product.Model - @product.Price (@product.CategoryName @product.ProductTypeName)">
                 <div class="card-body text-center">
-                    <h5 class="card-title text-center">@product.Price @product.Brand @product.Model (@product.Category @product.ProductType)</h5>
+                    <h5 class="card-title text-center">@product.Brand @if (product.Series != null)
+                    {@product.Series} @product.Model<br />[$@product.Price]</h5>
                     <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">View More</a>
                 </div>
             </div>
         </div>
     }
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-migrate-3.3.2.js"
+            integrity="sha256-BDmtN+79VRrkfamzD16UnAoJP8zMitAz093tvZATdiE="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#type").change(function () {
+                var val = $(this).val();
+                if (val == "item1") {
+                    $("#size").html("<option value='test'>item1: test 1</option><option value='test2'>item1: test 2</option>");
+                } else if (val == "item2") {
+                    $("#size").html("<option value='test'>item2: test 1</option><option value='test2'>item2: test 2</option>");
+                } else if (val == "item3") {
+                    $("#size").html("<option value='test'>item3: test 1</option><option value='test2'>item3: test 2</option>");
+                } else if (val == "item0") {
+                    $("#size").html("<option value=''>--select one--</option>");
+                }
+            });
+        });
+    </script>
+}

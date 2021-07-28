@@ -1,7 +1,8 @@
-﻿namespace HexiTech.Services
+﻿namespace HexiTech.Services.Products
 {
     using System.Collections.Generic;
     using HexiTech.Data.Models;
+    using HexiTech.Models;
     using Models;
 
     public interface IProductService

@@ -7,7 +7,7 @@
     using System.Linq;
     using Data;
     using Models.Products;
-    using Services;
+    using Services.Products;
 
     public class ProductsController : Controller
     {
@@ -28,7 +28,8 @@
                 query.SearchTerm,
                 query.Sorting,
                 query.CurrentPage,
-                AllProductsQueryModel.ProductsPerPage);
+                AllProductsQueryModel.ProductsPerPage
+                );
 
             var productBrands = this.products.AllBrands();
 

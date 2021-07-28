@@ -1,4 +1,4 @@
-﻿namespace HexiTech.Services
+﻿namespace HexiTech.Services.Products.Models
 {
     using System.Collections.Generic;
 
