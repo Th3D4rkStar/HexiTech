@@ -30,7 +30,7 @@
                 query.CurrentPage,
                 AllProductsQueryModel.ProductsPerPage);
 
-            var productBrands = this.products.AllProductBrands();
+            var productBrands = this.products.AllBrands();
 
             query.Brands = productBrands;
             query.TotalProducts = queryResult.TotalProducts;
@@ -73,6 +73,18 @@
 
                 return View(product);
             }
+
+            this.products.Create(
+                product.Brand,
+                product.Series,
+                product.Model,
+                product.ImageUrl,
+                product.ProductTypeId,
+                product.CategoryId,
+                product.Price,
+                product.Availability,
+                product.Description,
+                product.Specifications);
 
             try
             {

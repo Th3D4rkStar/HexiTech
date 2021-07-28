@@ -1,4 +1,6 @@
-﻿namespace HexiTech.Services
+﻿using HexiTech.Data.Models;
+
+namespace HexiTech.Services
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -61,7 +63,56 @@
             };
         }
 
-        public IEnumerable<string> AllProductBrands()
+        public int Create(string brand, string series, string model, string imageUrl, int productTypeId, int categoryId, decimal price,
+            ProductAvailability availability, string description, string specifications)
+        {
+            var productData = new Product
+            {
+                Brand = brand,
+                Series = series,
+                Model = model,
+                ImageUrl = imageUrl,
+                ProductTypeId = productTypeId,
+                CategoryId = categoryId,
+                Price = price,
+                Availability = availability,
+                Description = description,
+                Specifications = specifications
+            };
+
+            this.db.Products.Add(productData);
+            this.db.SaveChanges();
+
+            return productData.Id;
+        }
+
+        public bool Edit(int productId, string brand, string series, string model, string imageUrl, int productTypeId, int categoryId,
+            decimal price, ProductAvailability availability, string description, string specifications)
+        {
+            var productData = this.db.Products.Find(productId);
+
+            if (productData == null)
+            {
+                return false;
+            }
+
+            productData.Brand = brand;
+            productData.Series = series;
+            productData.Model = model;
+            productData.ImageUrl = imageUrl;
+            productData.ProductTypeId = productTypeId;
+            productData.CategoryId = categoryId;
+            productData.Price = price;
+            productData.Availability = availability;
+            productData.Description = description;
+            productData.Specifications = specifications;
+
+            this.db.SaveChanges();
+
+            return true;
+        }
+
+        public IEnumerable<string> AllBrands()
             => this.db
                 .Products
                 .Select(p => p.Brand)
