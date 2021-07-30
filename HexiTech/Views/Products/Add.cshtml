@@ -1,4 +1,5 @@
-﻿@model HexiTech.Models.Products.AddProductFormModel
+﻿@using HexiTech.Models.Products
+@model HexiTech.Models.Products.AddProductFormModel
 
 @{
     ViewBag.Title = "Add new product.";
@@ -7,7 +8,35 @@
 @* TODO: Connect category and type select, so type options depend on category. *@
 
 @*<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-<script type="text/javascript" src="/js/SelectScript2.js"></script>*@
+    <script type="text/javascript">
+            function GetSelectedValue(selectCategory) {
+                var selectedValue = selectCategory.value;
+
+                $(document).ready(function() {
+                    $("#selectType").empty();
+
+                    var typeList = [];
+
+                    @foreach (var prodType in Model.ProductTypes)
+                    {
+                        @:typeList.push("@prodType");
+                    }
+
+                    //var filteredList = typeList.filter(function checkId(pt) {
+                    //    return pt.CategoryId === selectedValue;
+                    //});
+
+                    var filteredList2 = [];
+
+                    filteredList2.push("<option selected>Choose...</option>");
+                    typeList.forEach(pt => {
+                        filteredList2.push("<option>" + pt.Name + "</option>");
+                    });
+
+                    $("#selectType").append(filteredList2);
+                });
+            }
+        </script>*@
 
 <div class="row">
     <div class="col-sm-12 col-lg-8 col-xl-12">
@@ -18,7 +47,7 @@
                 <div class="form-group col-md-6">
                     <label asp-for="CategoryId"></label>
                     <select asp-for="CategoryId" id="selectCategory" class="form-control">
-                        <option selected>Choose...</option>
+                        <option selected value="0">Choose...</option>
                         @foreach (var category in Model.Categories)
                         {
                             <option value="@category.Id">@category.Name</option>
@@ -29,24 +58,13 @@
                 <div class="form-group col-md-6">
                     <label asp-for="ProductTypeId">Type</label>
                     <select asp-for="ProductTypeId" id="selectType" class="form-control">
-                        <option selected>Choose...</option>
+                        <option selected value="0">Choose...</option>
                         @foreach (var productType in Model.ProductTypes)
                         {
                             <option value="@productType.Id">@productType.Name</option>
                         }
                     </select>
                     <span asp-validation-for="ProductTypeId" class="small text-danger"></span>
-
-                    @*<select id="type">
-                        <option value="item0">--Select an Item--</option>
-                        <option value="item1">item1</option>
-                        <option value="item2">item2</option>
-                        <option value="item3">item3</option>
-                    </select>
-                    <select id="size">
-                        <option value="">-- select one -- </option>
-                    </select>*@
-
                 </div>
             </div>
             <div class="form-row">
@@ -115,3 +133,30 @@
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#selectType').prop('disabled', true);
+
+            $('#selectCategory').on('change',
+                function() {
+                    $.ajax({
+                        url: '@Url.Action("GetCascadeTypes", "Products")',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { catId: $('#selectCategory').val() },
+                        success: function(data) {
+                            $('#selectType').prop('disabled', $('#selectCategory').val() == 0 ? true : false);
+                            $('#selectType').html('').append('<option value="0">Choose...</option>');
+                            $(data).each(function (index, item) {
+                                $('#selectType').append(`<option value="${item.id}">${item.name}</option>`);
+                            });
+                        }
+                    });
+                }
+            );
+        });
+    </script>
+}

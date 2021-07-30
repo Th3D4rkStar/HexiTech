@@ -29,13 +29,15 @@
                 query.Sorting,
                 query.CurrentPage,
                 AllProductsQueryModel.ProductsPerPage
-                );
+            );
 
             var productBrands = this.products.AllBrands();
 
             query.Brands = productBrands;
             query.TotalProducts = queryResult.TotalProducts;
             query.Products = queryResult.Products;
+            query.Categories = this.GetProductCategories();
+            query.ProductTypes = this.GetProductTypes();
 
             return View(query);
         }
@@ -95,6 +97,26 @@
             {
                 return View();
             }
+        }
+
+        public JsonResult GetCascadeCategories()
+        {
+            var cat = this.db
+                .Categories
+                .Select(c => new ProductCategoryViewModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
+
+            return Json(cat);
+        }
+        public JsonResult GetCascadeTypes(int catId)
+        {
+            var types = db.ProductTypes.Where(c => c.CategoryId == catId).ToList();
+
+            return Json(types);
         }
 
         private IEnumerable<ProductCategoryViewModel> GetProductCategories()

@@ -9,6 +9,7 @@ namespace HexiTech
     using Microsoft.Extensions.Hosting;
     using Data;
     using Services.Products;
+    using Newtonsoft.Json;
 
     public class Startup
     {
