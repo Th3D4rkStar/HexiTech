@@ -7,37 +7,6 @@
 
 @* TODO: Connect category and type select, so type options depend on category. *@
 
-@*<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script type="text/javascript">
-            function GetSelectedValue(selectCategory) {
-                var selectedValue = selectCategory.value;
-
-                $(document).ready(function() {
-                    $("#selectType").empty();
-
-                    var typeList = [];
-
-                    @foreach (var prodType in Model.ProductTypes)
-                    {
-                        @:typeList.push("@prodType");
-                    }
-
-                    //var filteredList = typeList.filter(function checkId(pt) {
-                    //    return pt.CategoryId === selectedValue;
-                    //});
-
-                    var filteredList2 = [];
-
-                    filteredList2.push("<option selected>Choose...</option>");
-                    typeList.forEach(pt => {
-                        filteredList2.push("<option>" + pt.Name + "</option>");
-                    });
-
-                    $("#selectType").append(filteredList2);
-                });
-            }
-        </script>*@
-
 <div class="row">
     <div class="col-sm-12 col-lg-8 col-xl-12">
         <h2 class="text-center">@ViewBag.Title</h2>
