@@ -2,7 +2,7 @@
 {
     public enum ProductSorting
     {
-        DateAdded = 1,
+        TimeAdded = 1,
         Price = 2,
         BrandAndModel = 3,
     }

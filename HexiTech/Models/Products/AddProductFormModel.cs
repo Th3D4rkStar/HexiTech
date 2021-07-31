@@ -10,8 +10,7 @@
         [Required]
         [StringLength(BrandMaxLength, MinimumLength = BrandMinLength)]
         public string Brand { get; set; }
-
-        [Required]
+        
         [StringLength(SeriesMaxLength)]
         public string Series { get; set; }
 
@@ -35,8 +34,10 @@
         public string Specifications { get; set; }
 
         [Required]
+        [Range(1, 3)]
         public ProductAvailability Availability { get; set; }
 
+        [Range(1, 100000)]
         public decimal Price { get; set; }
 
         [Display(Name = "Category")]
