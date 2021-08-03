@@ -33,6 +33,8 @@ namespace HexiTech
                 })
                 .AddEntityFrameworkStores<HexiTechDbContext>();
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllersWithViews();
 
             services.AddTransient<IProductService, ProductService>();

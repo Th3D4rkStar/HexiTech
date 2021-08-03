@@ -6,13 +6,19 @@
     using HexiTech.Data.Models;
     using HexiTech.Models;
     using Models;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
 
     public class ProductService : IProductService
     {
         private readonly HexiTechDbContext db;
+        private readonly IConfigurationProvider mapper;
 
-        public ProductService(HexiTechDbContext db)
-            => this.db = db;
+        public ProductService(HexiTechDbContext db, IMapper mapper)
+        {
+            this.db = db;
+            this.mapper = mapper.ConfigurationProvider;
+        }
 
         public ProductQueryServiceModel All(string brand, string searchTerm, ProductSorting sorting, int currentPage,
             int productsPerPage)
@@ -86,6 +92,15 @@
             this.db.SaveChanges();
 
             return productData.Id;
+        }
+
+        public ProductDetailsServiceModel Details(int productId)
+        {
+            return this.db
+                .Products
+                .Where(p => p.Id == productId)
+                .ProjectTo<ProductDetailsServiceModel>(this.mapper)
+                .FirstOrDefault();
         }
 
         public bool Edit(int productId, string brand, string series, string model, string imageUrl, int productTypeId, int categoryId,

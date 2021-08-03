@@ -1,10 +1,12 @@
 ﻿namespace HexiTech.Controllers
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using System.Collections.Generic;
-    using System.Linq;
+    using HexiTech.Services.Products.Models;
+    using AutoMapper;
     using Data;
     using Models.Products;
     using Services.Products;
@@ -13,11 +15,13 @@
     {
         private readonly IProductService products;
         private readonly HexiTechDbContext db;
+        private readonly IMapper mapper;
 
-        public ProductsController(IProductService products, HexiTechDbContext db)
+        public ProductsController(IProductService products, HexiTechDbContext db, IMapper mapper)
         {
             this.products = products;
             this.db = db;
+            this.mapper = mapper;
         }
 
         // GET: ProductsController
@@ -45,14 +49,16 @@
         // GET: ProductsController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var product = this.products.Details(id);
+
+            return this.View(product);
         }
 
         // GET: ProductsController/Add
         [Authorize]
         public ActionResult Add()
         {
-            return View(new AddProductFormModel
+            return View(new ProductFormModel
             {
                 Categories = this.GetProductCategories(),
                 ProductTypes = this.GetProductTypes()
@@ -63,7 +69,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Add(AddProductFormModel product)
+        public ActionResult Add(ProductFormModel product)
         {
             if (!this.db.Categories.Any(c => c.Id == product.CategoryId))
             {

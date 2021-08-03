@@ -26,6 +26,8 @@
             string description,
             string specifications);
 
+        ProductDetailsServiceModel Details(int productId);
+
         bool Edit(
             int productId,
             string brand,
@@ -40,6 +42,5 @@
             string specifications);
 
         IEnumerable<string> AllBrands();
-        //IEnumerable<ProductCategoryServiceModel>
     }
 }
