@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.Collections.Generic;
-    using HexiTech.Data.Models;
+    using Data.Enums;
     using static Data.DataConstants.Product;
 
     public class ProductFormModel
@@ -10,7 +10,7 @@
         [Required]
         [StringLength(BrandMaxLength, MinimumLength = BrandMinLength)]
         public string Brand { get; set; }
-        
+
         [StringLength(SeriesMaxLength)]
         public string Series { get; set; }
 

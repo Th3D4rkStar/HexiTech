@@ -14,6 +14,7 @@
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<ProductReview> ProductReviews { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,6 +43,13 @@
                 .HasOne(c => c.Category)
                 .WithMany(t => t.ProductTypes)
                 .HasForeignKey(c => c.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<ProductReview>()
+                .HasOne(p => p.Product)
+                .WithMany(pr => pr.ProductReviews)
+                .HasForeignKey(p => p.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);

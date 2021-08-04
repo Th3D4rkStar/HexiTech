@@ -1,4 +1,4 @@
-﻿namespace HexiTech.Data.Models
+﻿namespace HexiTech.Data.Enums
 {
     public enum ProductAvailability
     {

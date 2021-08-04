@@ -5,6 +5,7 @@
     using Data;
     using HexiTech.Data.Models;
     using HexiTech.Models;
+    using Data.Enums;
     using Models;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;

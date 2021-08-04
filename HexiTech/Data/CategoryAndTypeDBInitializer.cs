@@ -3,12 +3,13 @@
     using System.Linq;
     using Models;
 
+    /* TODO: Add all categories and types for seeding and a couple fo example products and fix database creation. */
     public class CategoryAndTypeDBInitializer
     {
         public static void Seed(HexiTechDbContext context)
         {
             //context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
+            //context.Database.EnsureCreated();
             if (!context.Categories.Any())
             {
                 context.Categories.AddRange(

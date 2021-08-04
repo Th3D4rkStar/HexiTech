@@ -1,6 +1,7 @@
 ﻿namespace HexiTech.Services.Products.Models
 {
-    using HexiTech.Data.Models;
+    using Data.Enums;
+
     public class ProductServiceModel
     {
         public int Id { get; init; }

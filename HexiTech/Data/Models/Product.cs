@@ -1,5 +1,8 @@
-﻿namespace HexiTech.Data.Models
+﻿using System.Collections.Generic;
+
+namespace HexiTech.Data.Models
 {
+    using Enums;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel.DataAnnotations;
     using static DataConstants.Product;
@@ -44,5 +47,7 @@
         public string Description { get; set; }
 
         public string Specifications { get; set; }
+
+        public IEnumerable<ProductReview> ProductReviews { get; set; } = new List<ProductReview>();
     }
 }

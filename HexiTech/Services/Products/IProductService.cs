@@ -1,7 +1,7 @@
 ﻿namespace HexiTech.Services.Products
 {
     using System.Collections.Generic;
-    using HexiTech.Data.Models;
+    using Data.Enums;
     using HexiTech.Models;
     using Models;
 

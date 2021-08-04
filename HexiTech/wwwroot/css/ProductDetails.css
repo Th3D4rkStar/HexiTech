@@ -9,9 +9,9 @@
     background-color: #007bff;
 }
 
-.category_block li:hover a {
-    color: #ffffff;
-}
+    .category_block li:hover a {
+        color: #ffffff;
+    }
 
 .category_block li a {
     color: #343a40;
@@ -72,15 +72,15 @@
     color: #6c757d;
 }
 
-.product_rassurance .list-inline {
-    margin-bottom: 0;
-    text-transform: uppercase;
-    text-align: center;
-}
+    .product_rassurance .list-inline {
+        margin-bottom: 0;
+        text-transform: uppercase;
+        text-align: center;
+    }
 
-.product_rassurance .list-inline li:hover {
-    color: #343a40;
-}
+        .product_rassurance .list-inline li:hover {
+            color: #343a40;
+        }
 
 .reviews_product .fa-star {
     color: gold;
@@ -88,6 +88,14 @@
 
 .pagination {
     margin-top: 20px;
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
 }
 
 /*footer {
@@ -98,3 +106,85 @@
 footer a {
     color: #f8f9fa !important
 }*/
+
+.cross {
+    padding: 5px;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 23px
+}
+
+    .cross i {
+        margin-top: -5px;
+        cursor: pointer
+    }
+
+.comment-box {
+    padding: 5px
+}
+
+.comment-area textarea {
+    resize: none;
+    border: 1px solid #007bff
+}
+
+.author-name {
+    border: 1px solid #007bff
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #ffffff;
+    outline: 0;
+    box-shadow: 0 0 0 1px #007bff !important
+}
+
+.send {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff
+}
+
+    .send:hover {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff
+    }
+
+.rating {
+    display: inline-flex;
+    margin-top: -10px;
+    flex-direction: row-reverse
+}
+
+    .rating > input {
+        display: none
+    }
+
+    .rating > label {
+        position: relative;
+        width: 28px;
+        font-size: 35px;
+        color: gold;
+        cursor: pointer
+    }
+
+        .rating > label::before {
+            content: "\2605";
+            position: absolute;
+            opacity: 0
+        }
+
+        .rating > label:hover:before,
+        .rating > label:hover ~ label:before {
+            opacity: 1 !important
+        }
+
+    .rating > input:checked ~ label:before {
+        opacity: 1
+    }
+
+    .rating:hover > input:checked ~ label:before {
+        opacity: 0.4
+    }
