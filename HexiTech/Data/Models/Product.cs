@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace HexiTech.Data.Models
+﻿namespace HexiTech.Data.Models
 {
     using Enums;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.ComponentModel.DataAnnotations;
     using static DataConstants.Product;
@@ -38,6 +37,9 @@ namespace HexiTech.Data.Models
         [Required]
         [Column(TypeName = "decimal(6,2)")]
         public decimal Price { get; set; }
+
+        [Range(0, 1000)]
+        public int Quantity { get; set; }
 
         [Required]
         public ProductAvailability Availability { get; set; }

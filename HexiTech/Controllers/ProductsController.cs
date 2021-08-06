@@ -56,6 +56,11 @@
         [HttpPost]
         public ActionResult Details(ProductReviewFormModel review)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Details");
+            }
+
             this.products.CreateReview(
                 review.Rating,
                 review.Content,
@@ -102,6 +107,7 @@
                 product.ProductTypeId,
                 product.CategoryId,
                 product.Price,
+                product.Quantity,
                 product.Availability,
                 product.Description,
                 product.Specifications);

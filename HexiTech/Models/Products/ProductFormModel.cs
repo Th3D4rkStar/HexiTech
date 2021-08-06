@@ -40,6 +40,9 @@
         [Range(1, 100000)]
         public decimal Price { get; set; }
 
+        [Range(0, 1000)]
+        public int Quantity { get; set; }
+
         [Display(Name = "Category")]
         public int CategoryId { get; init; }
 

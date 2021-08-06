@@ -1,4 +1,5 @@
 ﻿@using HexiTech.Data.Enums
+@using System.Linq
 @model HexiTech.Services.Products.Models.ProductDetailsServiceModel
 
 @{
@@ -9,10 +10,12 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="/js/DetailsScript.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
 <link href="/css/ProductDetails.css" rel="stylesheet" id="bootstrap-css">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-@* TODO: Create validation for adding reviews. Add item quantity. *@
+@* TODO: Add alert popup after failed modal validation. Set-up Cart view and OrderController and send order information from Details view. *@
 
 <div class="container">
     <div class="row">
@@ -94,20 +97,33 @@
                     <div class="row text-center col-12">
                         <div class="reviews_product p-3 mt-3 ml-2 col-7">
                             <a href="#reviews">@Model.ProductReviews.Count review(s)</a> |
-                            (<var hidden="">
-                                @{var ratSum = 0.0M;
-                                    foreach (var review in @Model.ProductReviews)
-                                    {
-                                        ratSum += (int)Enum.Parse(typeof(ReviewRatings), Enum.GetName(review.Rating));
-                                    }
-                                    decimal totalSum = ratSum / Model.ProductReviews.Count;}
-                            </var>@totalSum.ToString("F1")/5)
+                            @{
+                                if (Model.ProductReviews.Any())
+                                {
+                                    <var hidden="">
+                                        @{var ratSum = 0.0M;
+                                            foreach (var review in Model.ProductReviews)
+                                            {
+                                                ratSum += (int)Enum.Parse(typeof(ReviewRatings), Enum.GetName(review.Rating));
+                                            }
+                                            decimal totalSum = ratSum / Model.ProductReviews.Count;}
+                                    </var>
+                                    @:(@totalSum.ToString("F1")/5)
 
-                            @{for (int i = 0; i < Math.Floor(totalSum); i++)
-                                {<i class="fa fa-star"></i>}
+                                    for (int i = 0; i < Math.Floor(totalSum); i++)
+                                    {<i class="fa fa-star"></i> }
 
-                                for (int i = 0; i < 5 - Math.Floor(totalSum); i++)
-                                {<i class="fa fa-star-o"></i>}}
+                                    for (int i = 0; i < 5 - Math.Floor(totalSum); i++)
+                                    {<i class="fa fa-star-o"></i> }
+
+                                }
+
+                                else
+                                {
+                                    for (int i = 0; i < 5; i++)
+                                    {<i class="fa fa-star-o"></i>}
+                                }
+                            }
                         </div>
                         <div class="p-2 mt-3 col-4">
                             <a class="btn btn-outline-dark btn-lg ml-3 " href="#writeReview">Write a review</a>
@@ -149,52 +165,74 @@
         <div class="card border-light mb-3">
             <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-comment"></i> Reviews</div>
             <div class="card-body">
-                <div class="review">
-                    @foreach (var review in Model.ProductReviews)
+                @{
+                    if (!Model.ProductReviews.Any())
                     {
-                        <p>
-                            <span class="fa fa-calendar"></span>
-                            @review.ReviewDate | @Enum.GetName(review.Rating) @switch (Enum.GetName(review.Rating))
-                            {
-                                case "Excellent":
-                                    for (int i = 0; i < 5; i++)
-                                    {<span class="fa fa-star"></span> }
-                                    break;
-                                case "Good":
-                                    for (int i = 0; i < 4; i++)
-                                    {<span class="fa fa-star"></span> }
-                                    <span class="fa fa-star-o"></span>
-                                    break;
-                                case "Decent":
-                                    for (int i = 0; i < 3; i++)
-                                    {<span class="fa fa-star"></span> }
-                                    <span class="fa fa-star-o"></span>
-                                    <span class="fa fa-star-o"></span>
-                                    break;
-                                case "Bad":
-                                    for (int i = 0; i < 2; i++)
-                                    {<span class="fa fa-star"></span> }
-                                    <span class="fa fa-star-o"></span>
-                                    <span class="fa fa-star-o"></span>
-                                    <span class="fa fa-star-o"></span>
-                                    break;
-                                case "Awful":
-                                    for (int i = 0; i < 1; i++)
-                                    {<span class="fa fa-star"></span> }
-                                    <span class="fa fa-star-o"></span>
-                                    <span class="fa fa-star-o"></span>
-                                    <span class="fa fa-star-o"></span>
-                                    <span class="fa fa-star-o"></span>
-                                    break;
-                            } | by <span class="fa fa-user"></span> @review.Author
-                        </p>
-
-                        <p class="card-text">
-                            @review.Content
-                        </p>
-                        <hr>
+                        @:There are currently no reviews for this product.
                     }
-                </div>
+
+                    else
+                    {
+                        <div class="review">
+                            @foreach (var review in Model.ProductReviews)
+                            {
+                                <p>
+                                    <span class="fa fa-calendar"></span>
+                                    @review.ReviewDate | @Enum.GetName(review.Rating)
+                                    @switch (Enum.GetName(review.Rating))
+                                    {
+                                        case "Excellent":
+                                            for (int i = 0; i < 5; i++)
+                                            {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                            break;
+                                        case "Good":
+                                            for (int i = 0; i < 4; i++)
+                                            {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                            <span class="fa fa-star-o"></span>
+                                            break;
+                                        case "Decent":
+                                            for (int i = 0; i < 3; i++)
+                                            {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                            <span class="fa fa-star-o"></span>
+                                            <span class="fa fa-star-o"></span>
+                                            break;
+                                        case "Bad":
+                                            for (int i = 0; i < 2; i++)
+                                            {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                            <span class="fa fa-star-o"></span>
+                                            <span class="fa fa-star-o"></span>
+                                            <span class="fa fa-star-o"></span>
+                                            break;
+                                        case "Awful":
+                                            for (int i = 0; i < 1; i++)
+                                            {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                            <span class="fa fa-star-o"></span>
+                                            <span class="fa fa-star-o"></span>
+                                            <span class="fa fa-star-o"></span>
+                                            <span class="fa fa-star-o"></span>
+                                            break;
+                                    }
+                                    | by <span class="fa fa-user"></span> @review.Author
+                                </p>
+
+                                <p class="card-text">
+                                    @review.Content
+                                </p>
+                                <hr>
+                            }
+                        </div>
+                    }
+                }
             </div>
         </div>
     </div>
@@ -202,7 +240,7 @@
     <!-- Write a Review -->
     <div class="col-12" id="writeReview">
         <form method="post">
-            <button type="button" class="btn btn-outline-primary col-12" data-toggle="modal" data-target="#form"> Write a review for this product </button>
+            <button type="button" id="btn1" class="btn btn-outline-primary col-12" data-toggle="modal" data-target="#form"> Write a review for this product </button>
             <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -218,8 +256,8 @@
                                     <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
                                     <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
                                 </div>
-                                <div class="comment-area"> <textarea class="form-control" name="content" placeholder="Tell us what you think." rows="4"></textarea> </div>
-                                <div class="author-name"> <input class="form-control-plaintext" name="author" placeholder="Your name."> </div>
+                                <div class="comment-area"><textarea class="form-control" name="content" placeholder="Tell us what you think." rows="4"></textarea></div>
+                                <div class="author-name"><input class="form-control-plaintext" name="author" placeholder="Your name."></div>
                                 <input hidden="" name="productId" value="@Model.Id">
                                 <div class="text-center mt-4">
                                     <button type="submit" class="btn btn-success send px-5" asp-controller="Products" asp-action="Details">

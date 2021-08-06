@@ -24,6 +24,7 @@ namespace HexiTech.Services.Products
             int productTypeId,
             int categoryId,
             decimal price,
+            int quantity,
             ProductAvailability availability,
             string description,
             string specifications);

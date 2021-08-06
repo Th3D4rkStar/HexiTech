@@ -76,7 +76,7 @@ namespace HexiTech.Services.Products
         }
 
         public int Create(string brand, string series, string model, string imageUrl, int productTypeId, int categoryId, decimal price,
-            ProductAvailability availability, string description, string specifications)
+            int quantity, ProductAvailability availability, string description, string specifications)
         {
             var productData = new Product
             {
@@ -87,6 +87,7 @@ namespace HexiTech.Services.Products
                 ProductTypeId = productTypeId,
                 CategoryId = categoryId,
                 Price = price,
+                Quantity = quantity,
                 Availability = availability,
                 Description = description,
                 Specifications = specifications
