@@ -1,4 +1,5 @@
-﻿@model HexiTech.Services.Products.Models.ProductDetailsServiceModel
+﻿@using HexiTech.Data.Enums
+@model HexiTech.Services.Products.Models.ProductDetailsServiceModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,7 +12,7 @@
 <link href="/css/ProductDetails.css" rel="stylesheet" id="bootstrap-css">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
-@* TODO: Make adding reviews to products possible. *@
+@* TODO: Create validation for adding reviews. Add item quantity. *@
 
 <div class="container">
     <div class="row">
@@ -90,19 +91,26 @@
                             <li class="list-inline-item"><i class="fa fa-phone fa-2x"></i><br />+xx 1 23 45 67 89</li>
                         </ul>
                     </div>
-                    <div class="row">
-                        <div class="reviews_product p-3 mb-2 ">
-                            3 reviews
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            (4/5)
+                    <div class="row text-center col-12">
+                        <div class="reviews_product p-3 mt-3 ml-2 col-7">
+                            <a href="#reviews">@Model.ProductReviews.Count review(s)</a> |
+                            (<var hidden="">
+                                @{var ratSum = 0.0M;
+                                    foreach (var review in @Model.ProductReviews)
+                                    {
+                                        ratSum += (int)Enum.Parse(typeof(ReviewRatings), Enum.GetName(review.Rating));
+                                    }
+                                    decimal totalSum = ratSum / Model.ProductReviews.Count;}
+                            </var>@totalSum.ToString("F1")/5)
+
+                            @{for (int i = 0; i < Math.Floor(totalSum); i++)
+                                {<i class="fa fa-star"></i>}
+
+                                for (int i = 0; i < 5 - Math.Floor(totalSum); i++)
+                                {<i class="fa fa-star-o"></i>}}
                         </div>
-                        <div class="p-3 mb-2">
-                            <a class="btn btn-outline-dark btn-sm ml-2 " href="#reviews">View all reviews</a>
-                            <a class="btn btn-outline-dark btn-sm ml-2 " href="#writeReview">Write a review</a>
+                        <div class="p-2 mt-3 col-4">
+                            <a class="btn btn-outline-dark btn-lg ml-3 " href="#writeReview">Write a review</a>
                         </div>
                     </div>
                 </div>
@@ -124,6 +132,7 @@
         </div>
     </div>
 
+    <!-- Specifications -->
     <div class="col-6">
         <div class="card border-light mb-3">
             <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-align-justify"></i> Specifications</div>
@@ -141,76 +150,88 @@
             <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-comment"></i> Reviews</div>
             <div class="card-body">
                 <div class="review">
-                    @*<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>*@
-                    <meta itemprop="datePublished" content="01-01-2016">January 01, 2018
-
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    by Paul Smith
-                    <p class="blockquote">
-                    <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-                    </p>
-                    <hr>
-                </div>
-                <div>
                     @foreach (var review in Model.ProductReviews)
                     {
                         <p>
-                            @review.ReviewDate @Enum.GetName(review.Rating) @switch (Enum.GetName(review.Rating) )
+                            <span class="fa fa-calendar"></span>
+                            @review.ReviewDate | @Enum.GetName(review.Rating) @switch (Enum.GetName(review.Rating))
                             {
                                 case "Excellent":
                                     for (int i = 0; i < 5; i++)
-                                    {<span class="fa fa-star"></span>}
+                                    {<span class="fa fa-star"></span> }
                                     break;
                                 case "Good":
                                     for (int i = 0; i < 4; i++)
-                                    {<span class="fa fa-star"></span>}
+                                    {<span class="fa fa-star"></span> }
+                                    <span class="fa fa-star-o"></span>
                                     break;
                                 case "Decent":
                                     for (int i = 0; i < 3; i++)
-                                    {<span class="fa fa-star"></span>}
+                                    {<span class="fa fa-star"></span> }
+                                    <span class="fa fa-star-o"></span>
+                                    <span class="fa fa-star-o"></span>
                                     break;
                                 case "Bad":
                                     for (int i = 0; i < 2; i++)
-                                    {<span class="fa fa-star"></span>}
+                                    {<span class="fa fa-star"></span> }
+                                    <span class="fa fa-star-o"></span>
+                                    <span class="fa fa-star-o"></span>
+                                    <span class="fa fa-star-o"></span>
                                     break;
                                 case "Awful":
                                     for (int i = 0; i < 1; i++)
-                                    {<span class="fa fa-star"></span>}
+                                    {<span class="fa fa-star"></span> }
+                                    <span class="fa fa-star-o"></span>
+                                    <span class="fa fa-star-o"></span>
+                                    <span class="fa fa-star-o"></span>
+                                    <span class="fa fa-star-o"></span>
                                     break;
-                            } by @review.Author
+                            } | by <span class="fa fa-user"></span> @review.Author
                         </p>
 
                         <p class="card-text">
                             @review.Content
                         </p>
+                        <hr>
                     }
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Write a Review -->
     <div class="col-12" id="writeReview">
-        <button type="button" class="btn btn-outline-primary col-12" data-toggle="modal" data-target="#form"> Write a review for this product </button>
-        <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="text-right cross" data-dismiss="modal"> <i class="fa fa-times mr-2"></i> </div>
-                    <div class="card-body text-center">
-                        <img src=" https://i.imgur.com/d2dKtI7.png" height="100" width="100">
-                        <div class="comment-box text-center">
-                            <h4>Rate your experience with this product?</h4>
-                            <div class="rating"> <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label> <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label> <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label> <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label> </div>
-                            <div class="comment-area"> <textarea class="form-control" placeholder="Tell us what you think." rows="4"></textarea> </div>
-                            <div class="author-name"> <input class="form-control-plaintext" placeholder="Your name."> </div>
-                            <div class="text-center mt-4"> <button class="btn btn-success send px-5">Post review<i class="fa fa-long-arrow-right ml-1"></i></button> </div>
+        <form method="post">
+            <button type="button" class="btn btn-outline-primary col-12" data-toggle="modal" data-target="#form"> Write a review for this product </button>
+            <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="text-right cross" data-dismiss="modal"> <i class="fa fa-times mr-2"></i> </div>
+                        <div class="card-body text-center">
+                            <img src=" https://i.imgur.com/d2dKtI7.png" height="100" width="100">
+                            <div class="comment-box text-center">
+                                <h4>Rate your experience with this product.</h4>
+                                <div class="rating">
+                                    <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                                    <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                                    <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                                    <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                                    <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                                </div>
+                                <div class="comment-area"> <textarea class="form-control" name="content" placeholder="Tell us what you think." rows="4"></textarea> </div>
+                                <div class="author-name"> <input class="form-control-plaintext" name="author" placeholder="Your name."> </div>
+                                <input hidden="" name="productId" value="@Model.Id">
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn btn-success send px-5" asp-controller="Products" asp-action="Details">
+                                        Post review<i class="fa fa-long-arrow-right ml-1"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 

@@ -1,4 +1,6 @@
-﻿namespace HexiTech.Services.Products
+﻿using HexiTech.Data.Models;
+
+namespace HexiTech.Services.Products
 {
     using System.Collections.Generic;
     using Data.Enums;
@@ -25,6 +27,13 @@
             ProductAvailability availability,
             string description,
             string specifications);
+
+        int CreateReview(
+            ReviewRatings rating,
+            string content,
+            string author,
+            int productId
+        );
 
         ProductDetailsServiceModel Details(int productId);
 

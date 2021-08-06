@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Meeting all your tech needs.</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
@@ -29,7 +30,7 @@
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />
-                    <a class="btn btn-success btn-sm ml-3" href="cart.html">
+                    <a class="btn btn-success btn-sm ml-3" asp-area="" asp-controller="Order" asp-action="Cart">
                         <i class="fa fa-shopping-cart"></i> Cart
                         <span class="badge badge-light">3</span>
                     </a>

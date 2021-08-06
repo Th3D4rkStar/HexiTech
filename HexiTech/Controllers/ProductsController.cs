@@ -5,7 +5,6 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using HexiTech.Services.Products.Models;
     using AutoMapper;
     using Data;
     using Models.Products;
@@ -52,6 +51,18 @@
             var product = this.products.Details(id);
 
             return this.View(product);
+        }
+
+        [HttpPost]
+        public ActionResult Details(ProductReviewFormModel review)
+        {
+            this.products.CreateReview(
+                review.Rating,
+                review.Content,
+                review.Author,
+                review.ProductId);
+
+            return RedirectToAction("Details");
         }
 
         // GET: ProductsController/Add

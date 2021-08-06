@@ -86,6 +86,10 @@
     color: gold;
 }
 
+.review .fa-star {
+    color: gold;
+}
+
 .pagination {
     margin-top: 20px;
 }
@@ -97,15 +101,6 @@
     white-space: nowrap;
     line-height: 60px;
 }
-
-/*footer {
-    background: #343a40;
-    padding: 40px;
-}
-
-footer a {
-    color: #f8f9fa !important
-}*/
 
 .cross {
     padding: 5px;

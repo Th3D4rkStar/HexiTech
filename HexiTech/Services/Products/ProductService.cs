@@ -1,4 +1,7 @@
-﻿namespace HexiTech.Services.Products
+﻿using System;
+using System.Globalization;
+
+namespace HexiTech.Services.Products
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -93,6 +96,23 @@
             this.db.SaveChanges();
 
             return productData.Id;
+        }
+
+        public int CreateReview(ReviewRatings rating, string content, string author, int productId)
+        {
+            var reviewData = new ProductReview
+            {
+                Rating = rating,
+                Content = content,
+                Author = author,
+                ProductId = productId,
+                ReviewDate = DateTime.UtcNow.ToString("MMMM dd yyyy", CultureInfo.InvariantCulture)
+            };
+
+            this.db.ProductReviews.Add(reviewData);
+            this.db.SaveChanges();
+
+            return reviewData.Id;
         }
 
         public ProductDetailsServiceModel Details(int productId)

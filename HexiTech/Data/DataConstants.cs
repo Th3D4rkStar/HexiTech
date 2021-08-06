@@ -27,5 +27,14 @@
             public const int NameMinLength = 2;
             public const int NameMaxLength = 25;
         }
+
+        public class ProductReview
+        {
+            public const int AuthorMinLength = 2;
+            public const int AuthorMaxLength = 30;
+
+            public const int ContentMinLength = 5;
+            public const int ContentMaxLength = 5000;
+        }
     }
 }
