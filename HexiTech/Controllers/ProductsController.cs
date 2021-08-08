@@ -229,7 +229,7 @@
 
             TempData[GlobalMessageKey] = "Your product was edited!";
 
-            return RedirectToAction(nameof(Details), id);
+            return RedirectToAction(nameof(Details), new { id });
         }
 
 
