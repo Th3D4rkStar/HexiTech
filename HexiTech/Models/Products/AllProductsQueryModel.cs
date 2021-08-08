@@ -25,11 +25,11 @@
         [Display(Name = "Category")]
         public int CategoryId { get; init; }
 
-        public IEnumerable<ProductCategoryViewModel> Categories { get; set; } = new List<ProductCategoryViewModel>();
+        public IEnumerable<ProductCategoryServiceModel> Categories { get; set; } = new List<ProductCategoryServiceModel>();
 
         [Display(Name = "ProductType")]
         public int ProductTypeId { get; init; }
 
-        public IEnumerable<ProductTypeViewModel> ProductTypes { get; set; } = new List<ProductTypeViewModel>();
+        public IEnumerable<ProductTypeServiceModel> ProductTypes { get; set; } = new List<ProductTypeServiceModel>();
     }
 }

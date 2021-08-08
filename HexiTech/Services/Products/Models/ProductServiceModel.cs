@@ -2,7 +2,7 @@
 {
     using Data.Enums;
 
-    public class ProductServiceModel
+    public class ProductServiceModel : IProductModel
     {
         public int Id { get; init; }
 
@@ -18,8 +18,12 @@
 
         public ProductAvailability Availability { get; set; }
 
+        public int Quantity { get; set; }
+
         public string ProductTypeName { get; set; }
 
         public string CategoryName { get; set; }
+
+        public bool IsPublic { get; set; }
     }
 }

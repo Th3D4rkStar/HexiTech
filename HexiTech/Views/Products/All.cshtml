@@ -1,5 +1,4 @@
-﻿@using HexiTech.Models.Products
-@model HexiTech.Models.Products.AllProductsQueryModel
+﻿@model HexiTech.Models.Products.AllProductsQueryModel
 
 @{
     ViewData["Title"] = "All Products";
@@ -89,6 +88,11 @@
                         {@product.Series} @product.Model<br />[$@product.Price]
                     </h5>
                     <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">View More</a>
+                    @if (ViewBag.AllowProductEdit == true || User.IsAdmin())
+                    {
+                        <a asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
+                        <a asp-controller="Products" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger">Delete</a>
+                    }
                 </div>
             </div>
         </div>
@@ -142,12 +146,16 @@
             $('#selectType').prop('disabled', true);
 
             $('#selectCategory').on('change',
-                function() {
+                function () {
+                    var t = $("input[name='__RequestVerificationToken']").val();
                     $.ajax({
                         url: '@Url.Action("GetCascadeTypes", "Products")',
                         type: 'POST',
                         dataType: 'json',
                         data: { catId: $('#selectCategory').val() },
+                        headers: {
+                            "RequestVerificationToken": t
+                        },
                         success: function(data) {
                             $('#selectType').prop('disabled', $('#selectCategory').val() == 0 ? true : false);
                             $('#selectType').html('').append('<option value="0">Choose...</option>');
@@ -160,4 +168,5 @@
             );
         });
     </script>
+    <partial name="_ValidationScriptsPartial" />
 }

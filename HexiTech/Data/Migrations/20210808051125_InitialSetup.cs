@@ -6,6 +6,13 @@ namespace HexiTech.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<string>(
+                name: "FullName",
+                table: "AspNetUsers",
+                type: "nvarchar(40)",
+                maxLength: 40,
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
@@ -52,7 +59,9 @@ namespace HexiTech.Data.Migrations
                     ProductTypeId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(6,2)", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
                     Availability = table.Column<int>(type: "int", nullable: false),
+                    IsPublic = table.Column<bool>(type: "bit", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
                     Specifications = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -73,6 +82,61 @@ namespace HexiTech.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "CartItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CartId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    DateCreated = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CartItems_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductReviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Author = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    ReviewDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductReviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductReviews_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItems_ProductId",
+                table: "CartItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductReviews_ProductId",
+                table: "ProductReviews",
+                column: "ProductId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
                 table: "Products",
@@ -92,6 +156,12 @@ namespace HexiTech.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CartItems");
+
+            migrationBuilder.DropTable(
+                name: "ProductReviews");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
@@ -99,6 +169,10 @@ namespace HexiTech.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropColumn(
+                name: "FullName",
+                table: "AspNetUsers");
         }
     }
 }

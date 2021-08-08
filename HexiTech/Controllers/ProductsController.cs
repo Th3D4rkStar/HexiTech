@@ -5,10 +5,14 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Infrastructure.Extensions;
     using AutoMapper;
     using Data;
+    using HexiTech.Services.Products.Models;
     using Models.Products;
     using Services.Products;
+
+    using static WebConstants;
 
     public class ProductsController : Controller
     {
@@ -23,8 +27,7 @@
             this.mapper = mapper;
         }
 
-        // GET: ProductsController
-        public ActionResult All([FromQuery] AllProductsQueryModel query)
+        public IActionResult All([FromQuery] AllProductsQueryModel query)
         {
             var queryResult = this.products.All(
                 query.Brand,
@@ -45,8 +48,7 @@
             return View(query);
         }
 
-        // GET: ProductsController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
             var product = this.products.Details(id);
 
@@ -54,11 +56,13 @@
         }
 
         [HttpPost]
-        public ActionResult Details(ProductReviewFormModel review)
+        public IActionResult AddReview(ProductReviewFormModel review)
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Details");
+                TempData[FailureMessageKey] = "Incomplete review!";
+
+                return RedirectToAction(nameof(Details), new { id = review.ProductId });
             }
 
             this.products.CreateReview(
@@ -67,12 +71,13 @@
                 review.Author,
                 review.ProductId);
 
-            return RedirectToAction("Details");
+            TempData[GlobalMessageKey] = "Your review was published!";
+
+            return RedirectToAction(nameof(Details), new { id = review.ProductId });
         }
 
-        // GET: ProductsController/Add
         [Authorize]
-        public ActionResult Add()
+        public IActionResult Add()
         {
             return View(new ProductFormModel
             {
@@ -81,11 +86,10 @@
             });
         }
 
-        // POST: ProductsController/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Add(ProductFormModel product)
+        public IActionResult Add(ProductFormModel product)
         {
             if (!this.db.Categories.Any(c => c.Id == product.CategoryId))
             {
@@ -99,7 +103,7 @@
                 return View(product);
             }
 
-            this.products.Create(
+            var productId = this.products.Create(
                 product.Brand,
                 product.Series,
                 product.Model,
@@ -112,21 +116,16 @@
                 product.Description,
                 product.Specifications);
 
-            try
-            {
-                return RedirectToAction(nameof(All));
-            }
-            catch
-            {
-                return View();
-            }
+            TempData[GlobalMessageKey] = "The product was added!";
+
+            return RedirectToAction(nameof(Details), new { id = productId });
         }
 
         public JsonResult GetCascadeCategories()
         {
             var cat = this.db
                 .Categories
-                .Select(c => new ProductCategoryViewModel()
+                .Select(c => new ProductCategoryServiceModel()
                 {
                     Id = c.Id,
                     Name = c.Name
@@ -142,20 +141,20 @@
             return Json(types);
         }
 
-        private IEnumerable<ProductCategoryViewModel> GetProductCategories()
+        private IEnumerable<ProductCategoryServiceModel> GetProductCategories()
             => this.db
                 .Categories
-                .Select(c => new ProductCategoryViewModel()
+                .Select(c => new ProductCategoryServiceModel()
                 {
                     Id = c.Id,
                     Name = c.Name
                 })
                 .ToList();
 
-        private IEnumerable<ProductTypeViewModel> GetProductTypes()
+        private IEnumerable<ProductTypeServiceModel> GetProductTypes()
             => this.db
                 .ProductTypes
-                .Select(pt => new ProductTypeViewModel()
+                .Select(pt => new ProductTypeServiceModel()
                 {
                     Id = pt.Id,
                     Name = pt.Name,
@@ -164,29 +163,78 @@
                 })
                 .ToList();
 
-        // GET: ProductsController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
-            return View();
+            var userId = this.User.Id();
+
+            var product = this.products.Details(id);
+
+            if (!User.IsAdmin())
+            {
+                return Unauthorized();
+            }
+
+            var productForm = this.mapper.Map<ProductFormModel>(product);
+
+            productForm.Categories = this.products.AllCategories();
+            productForm.ProductTypes = this.products.AllProductTypes();
+
+            return View(productForm);
         }
 
-        // POST: ProductsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, ProductFormModel product)
         {
-            try
+            if (!this.products.CategoryExists(product.CategoryId))
             {
-                return RedirectToAction(nameof(All));
+                this.ModelState.AddModelError(nameof(product.CategoryId), "Category does not exist.");
             }
-            catch
+            if (!this.products.ProductTypeExists(product.ProductTypeId))
             {
-                return View();
+                this.ModelState.AddModelError(nameof(product.ProductTypeId), "Product type does not exist.");
             }
+
+            if (!ModelState.IsValid)
+            {
+                product.Categories = this.products.AllCategories();
+                product.ProductTypes = this.products.AllProductTypes();
+
+                return View(product);
+            }
+
+            if (!User.IsAdmin())
+            {
+                return BadRequest();
+            }
+
+            var edited = this.products.Edit(
+                id,
+                product.Brand,
+                product.Series,
+                product.Model,
+                product.ImageUrl,
+                product.ProductTypeId,
+                product.CategoryId,
+                product.Price,
+                product.Quantity,
+                product.Availability,
+                product.Description,
+                product.Specifications);
+
+            if (!edited)
+            {
+                return BadRequest();
+            }
+
+            TempData[GlobalMessageKey] = "Your product was edited!";
+
+            return RedirectToAction(nameof(Details), id);
         }
 
+
         // GET: ProductsController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             return View();
         }
@@ -194,7 +242,7 @@
         // POST: ProductsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id, IFormCollection collection)
         {
             try
             {

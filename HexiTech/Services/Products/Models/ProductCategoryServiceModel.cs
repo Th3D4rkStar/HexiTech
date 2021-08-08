@@ -1,6 +1,6 @@
-﻿namespace HexiTech.Models.Products
+﻿namespace HexiTech.Services.Products.Models
 {
-    public class ProductCategoryViewModel
+    public class ProductCategoryServiceModel
     {
         public int Id { get; init; }
 

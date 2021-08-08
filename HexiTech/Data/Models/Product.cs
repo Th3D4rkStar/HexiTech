@@ -44,6 +44,8 @@
         [Required]
         public ProductAvailability Availability { get; set; }
 
+        public bool IsPublic { get; set; }
+
         [Required]
         [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
         public string Description { get; set; }

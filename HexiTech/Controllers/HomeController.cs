@@ -1,33 +1,45 @@
 ﻿namespace HexiTech.Controllers
 {
-    using Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Services.Products;
+    using HexiTech.Services.Products.Models;
+    using Microsoft.Extensions.Caching.Memory;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Logging;
-    using System.Diagnostics;
+
+    using static WebConstants.Cache;
 
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IProductService products;
+        private readonly IMemoryCache cache;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IProductService products, IMemoryCache cache)
         {
-            _logger = logger;
+            this.products = products;
+            this.cache = cache;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var latestProducts = this.cache.Get<List<LatestProductServiceModel>>(LatestProductsCacheKey);
+
+            if (latestProducts == null)
+            {
+                latestProducts = this.products
+                    .Latest()
+                    .ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
+
+                this.cache.Set(LatestProductsCacheKey, latestProducts, cacheOptions);
+            }
+
+            return View(latestProducts);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        public IActionResult Error() => View();
     }
 }

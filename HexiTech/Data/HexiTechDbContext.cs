@@ -4,17 +4,22 @@
     using Microsoft.EntityFrameworkCore;
     using Models;
 
-    public class HexiTechDbContext : IdentityDbContext
+    public class HexiTechDbContext : IdentityDbContext<User>
     {
         public HexiTechDbContext(DbContextOptions<HexiTechDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<ProductType> ProductTypes { get; set; }
-        public DbSet<ProductReview> ProductReviews { get; set; }
+        public DbSet<Product> Products { get; init; }
+
+        public DbSet<Category> Categories { get; init; }
+
+        public DbSet<ProductType> ProductTypes { get; init; }
+
+        public DbSet<ProductReview> ProductReviews { get; init; }
+
+        public DbSet<CartItem> CartItems { get; init; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

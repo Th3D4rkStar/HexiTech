@@ -2,10 +2,11 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.Collections.Generic;
+    using HexiTech.Services.Products.Models;
     using Data.Enums;
     using static Data.DataConstants.Product;
 
-    public class ProductFormModel
+    public class ProductFormModel : IProductModel
     {
         [Required]
         [StringLength(BrandMaxLength, MinimumLength = BrandMinLength)]
@@ -37,6 +38,8 @@
         [Range(1, 3)]
         public ProductAvailability Availability { get; set; }
 
+        public bool IsPublic { get; set; }
+
         [Range(1, 100000)]
         public decimal Price { get; set; }
 
@@ -46,11 +49,11 @@
         [Display(Name = "Category")]
         public int CategoryId { get; init; }
 
-        public IEnumerable<ProductCategoryViewModel> Categories { get; set; } = new List<ProductCategoryViewModel>();
+        public IEnumerable<ProductCategoryServiceModel> Categories { get; set; } = new List<ProductCategoryServiceModel>();
 
         [Display(Name = "ProductType")]
         public int ProductTypeId { get; init; }
 
-        public IEnumerable<ProductTypeViewModel> ProductTypes { get; set; } = new List<ProductTypeViewModel>();
+        public IEnumerable<ProductTypeServiceModel> ProductTypes { get; set; } = new List<ProductTypeServiceModel>();
     }
 }

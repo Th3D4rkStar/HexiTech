@@ -1,6 +1,4 @@
-﻿using HexiTech.Data.Models;
-
-namespace HexiTech.Services.Products
+﻿namespace HexiTech.Services.Products
 {
     using System.Collections.Generic;
     using Data.Enums;
@@ -10,11 +8,14 @@ namespace HexiTech.Services.Products
     public interface IProductService
     {
         ProductQueryServiceModel All(
-            string brand,
-            string searchTerm,
-            ProductSorting sorting,
-            int currentPage,
-            int productsPerPage);
+            string brand = null,
+            string searchTerm = null,
+            ProductSorting sorting = ProductSorting.TimeAdded,
+            int currentPage = 1,
+            int productsPerPage = int.MaxValue,
+            bool publicOnly = true);
+
+        public IEnumerable<LatestProductServiceModel> Latest();
 
         int Create(
             string brand,
@@ -47,10 +48,21 @@ namespace HexiTech.Services.Products
             int productTypeId,
             int categoryId,
             decimal price,
+            int quantity,
             ProductAvailability availability,
             string description,
             string specifications);
 
+        void ChangeVisibility(int productId);
+
         IEnumerable<string> AllBrands();
+
+        IEnumerable<ProductCategoryServiceModel> AllCategories();
+
+        IEnumerable<ProductTypeServiceModel> AllProductTypes();
+
+        public bool CategoryExists(int categoryId);
+
+        public bool ProductTypeExists(int productTypeId);
     }
 }

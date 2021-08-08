@@ -9,9 +9,18 @@
     {
         public MappingProfile()
         {
-            //this.CreateMap<Product, LatestProductServiceModel>();
+            this.CreateMap<Category, ProductCategoryServiceModel>();
+            this.CreateMap<ProductType, ProductTypeServiceModel>();
+
+            this.CreateMap<Product, LatestProductServiceModel>();
             this.CreateMap<ProductDetailsServiceModel, ProductFormModel>();
-            this.CreateMap<Product, ProductDetailsServiceModel>();
+
+
+              this.CreateMap<Product, ProductServiceModel>()
+                .ForMember(p => p.CategoryName, cfg => cfg.MapFrom(p => p.Category.Name));
+
+            this.CreateMap<Product, ProductDetailsServiceModel>()
+                .ForMember(p => p.CategoryName, cfg => cfg.MapFrom(p => p.Category.Name));
         }
     }
 }

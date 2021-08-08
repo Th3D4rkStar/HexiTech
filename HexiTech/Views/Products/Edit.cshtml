@@ -1,7 +1,7 @@
 ﻿@model HexiTech.Models.Products.ProductFormModel
 
 @{
-    ViewBag.Title = "Add new product.";
+    ViewBag.Title = "Edit product.";
 }
 
 <partial name="_ProductFormPartial" model="@Model" />
@@ -12,8 +12,8 @@
         $(document).ready(function() {
             $('#selectType').prop('disabled', true);
 
-            $('#selectCategory').on('change',
-                function () {
+            $('#selectCategory').on('mouseover click change',
+                function cng() {
                     var t = $("input[name='__RequestVerificationToken']").val();
                     $.ajax({
                         url: '@Url.Action("GetCascadeTypes", "Products")',
@@ -26,7 +26,7 @@
                         success: function(data) {
                             $('#selectType').prop('disabled', $('#selectCategory').val() == 0 ? true : false);
                             $('#selectType').html('').append('<option value="0">Choose...</option>');
-                            $(data).each(function (index, item) {
+                            $(data).each(function(index, item) {
                                 $('#selectType').append(`<option value="${item.id}">${item.name}</option>`);
                             });
                         }

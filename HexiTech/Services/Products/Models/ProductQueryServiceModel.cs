@@ -1,6 +1,5 @@
 ﻿namespace HexiTech.Services.Products.Models
 {
-    using HexiTech.Models.Products;
     using System.Collections.Generic;
 
     public class ProductQueryServiceModel
@@ -13,8 +12,8 @@
 
         public IEnumerable<ProductServiceModel> Products { get; init; }
 
-        public IEnumerable<ProductCategoryViewModel> Categories { get; set; } = new List<ProductCategoryViewModel>();
+        public IEnumerable<ProductCategoryServiceModel> Categories { get; set; } = new List<ProductCategoryServiceModel>();
 
-        public IEnumerable<ProductTypeViewModel> ProductTypes { get; set; } = new List<ProductTypeViewModel>();
+        public IEnumerable<ProductTypeServiceModel> ProductTypes { get; set; } = new List<ProductTypeServiceModel>();
     }
 }

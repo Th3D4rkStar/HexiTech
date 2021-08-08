@@ -1,10 +1,9 @@
-﻿using System;
-using System.Globalization;
-
-namespace HexiTech.Services.Products
+﻿namespace HexiTech.Services.Products
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System;
+    using System.Globalization;
     using Data;
     using HexiTech.Data.Models;
     using HexiTech.Models;
@@ -24,10 +23,16 @@ namespace HexiTech.Services.Products
             this.mapper = mapper.ConfigurationProvider;
         }
 
-        public ProductQueryServiceModel All(string brand, string searchTerm, ProductSorting sorting, int currentPage,
-            int productsPerPage)
+        public ProductQueryServiceModel All(
+            string brand = null,
+            string searchTerm = null,
+            ProductSorting sorting = ProductSorting.TimeAdded,
+            int currentPage = 1,
+            int productsPerPage = int.MaxValue,
+            bool publicOnly = true)
         {
-            var productsQuery = this.db.Products.AsQueryable();
+            var productsQuery = this.db.Products
+                .Where(p => !publicOnly || p.IsPublic);
 
             if (!string.IsNullOrWhiteSpace(brand))
             {
@@ -50,21 +55,9 @@ namespace HexiTech.Services.Products
 
             var totalProducts = productsQuery.Count();
 
-            var products = productsQuery
+            var products = GetProducts(productsQuery)
                 .Skip((currentPage - 1) * productsPerPage)
-                .Take(productsPerPage)
-                .Select(p => new ProductServiceModel
-                {
-                    Id = p.Id,
-                    Brand = p.Brand,
-                    Series = p.Series,
-                    Model = p.Model,
-                    Price = p.Price,
-                    ImageUrl = p.ImageUrl,
-                    ProductTypeName = p.ProductType.Name,
-                    CategoryName = p.Category.Name
-                })
-                .ToList();
+                .Take(productsPerPage);
 
             return new ProductQueryServiceModel
             {
@@ -74,6 +67,15 @@ namespace HexiTech.Services.Products
                 Products = products
             };
         }
+
+        public IEnumerable<LatestProductServiceModel> Latest()
+            => this.db
+                .Products
+                .Where(p => p.IsPublic)
+                .OrderByDescending(p => p.Id)
+                .ProjectTo<LatestProductServiceModel>(this.mapper)
+                .Take(6)
+                .ToList();
 
         public int Create(string brand, string series, string model, string imageUrl, int productTypeId, int categoryId, decimal price,
             int quantity, ProductAvailability availability, string description, string specifications)
@@ -90,7 +92,8 @@ namespace HexiTech.Services.Products
                 Quantity = quantity,
                 Availability = availability,
                 Description = description,
-                Specifications = specifications
+                Specifications = specifications,
+                IsPublic = false
             };
 
             this.db.Products.Add(productData);
@@ -116,17 +119,26 @@ namespace HexiTech.Services.Products
             return reviewData.Id;
         }
 
-        public ProductDetailsServiceModel Details(int productId)
-        {
-            return this.db
+        public ProductDetailsServiceModel Details(int productId) =>
+            this.db
                 .Products
                 .Where(p => p.Id == productId)
                 .ProjectTo<ProductDetailsServiceModel>(this.mapper)
                 .FirstOrDefault();
-        }
 
-        public bool Edit(int productId, string brand, string series, string model, string imageUrl, int productTypeId, int categoryId,
-            decimal price, ProductAvailability availability, string description, string specifications)
+        public bool Edit(
+            int productId,
+            string brand,
+            string series,
+            string model,
+            string imageUrl,
+            int productTypeId,
+            int categoryId,
+            decimal price,
+            int quantity,
+            ProductAvailability availability,
+            string description,
+            string specifications)
         {
             var productData = this.db.Products.Find(productId);
 
@@ -142,6 +154,7 @@ namespace HexiTech.Services.Products
             productData.ProductTypeId = productTypeId;
             productData.CategoryId = categoryId;
             productData.Price = price;
+            productData.Quantity = quantity;
             productData.Availability = availability;
             productData.Description = description;
             productData.Specifications = specifications;
@@ -151,12 +164,48 @@ namespace HexiTech.Services.Products
             return true;
         }
 
+        public void ChangeVisibility(int productId)
+        {
+            var product = this.db.Products.Find(productId);
+
+            product.IsPublic = !product.IsPublic;
+
+            this.db.SaveChanges();
+        }
+
         public IEnumerable<string> AllBrands()
             => this.db
                 .Products
                 .Select(p => p.Brand)
                 .Distinct()
                 .OrderBy(br => br)
+                .ToList();
+
+        public IEnumerable<ProductCategoryServiceModel> AllCategories()
+            => this.db
+                .Categories
+                .ProjectTo<ProductCategoryServiceModel>(this.mapper)
+                .ToList();
+
+        public IEnumerable<ProductTypeServiceModel> AllProductTypes()
+            => this.db
+                .ProductTypes
+                .ProjectTo<ProductTypeServiceModel>(this.mapper)
+                .ToList();
+
+        public bool CategoryExists(int categoryId)
+            => this.db
+                .Categories
+                .Any(c => c.Id == categoryId);
+
+        public bool ProductTypeExists(int productTypeId)
+            => this.db
+                .ProductTypes
+                .Any(c => c.Id == productTypeId);
+
+        private IEnumerable<ProductServiceModel> GetProducts(IQueryable<Product> productQuery)
+            => productQuery
+                .ProjectTo<ProductServiceModel>(this.mapper)
                 .ToList();
     }
 }

@@ -1,7 +1,8 @@
-﻿namespace HexiTech.Models.Products
+﻿using HexiTech.Data.Models;
+
+namespace HexiTech.Services.Products.Models
 {
-    using HexiTech.Data.Models;
-    public class ProductTypeViewModel
+    public class ProductTypeServiceModel
     {
         public int Id { get; init; }
 

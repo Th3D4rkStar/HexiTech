@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using HexiTech.Infrastructure.Extensions
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,9 +26,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="All">All Products</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Add">Add a product</a>
-                        </li>
+                        @if (User.IsAdmin())
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Add">Add a product</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                     <a class="btn btn-success btn-sm ml-3" asp-area="" asp-controller="Order" asp-action="Cart">
@@ -39,6 +43,20 @@
         </nav>
     </header>
     <div class="container">
+        @{
+            if (TempData.ContainsKey(WebConstants.GlobalMessageKey))
+            {
+                <div class="alert alert-success text-center" role="alert">
+                    @TempData[WebConstants.GlobalMessageKey]
+                </div>
+            }
+            else if (TempData.ContainsKey(WebConstants.FailureMessageKey))
+            {
+                <div class="alert alert-danger text-center" role="alert">
+                    @TempData[WebConstants.FailureMessageKey]
+                </div>
+            }
+        }
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

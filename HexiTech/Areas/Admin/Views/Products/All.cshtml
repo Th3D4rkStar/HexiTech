@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ProductServiceModel>
+
+@{
+    ViewBag.Title = "Products Administration";
+}
+
+<h1 class="text-center">Manage Products</h1>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+
+        <tr>
+
+            <th scope="col">Id</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Series</th>
+            <th scope="col">Model</th>
+            <th scope="col">Price</th>
+            <th scope="col">Availability</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Type</th>
+            <th scope="col">Category</th>
+            <th scope="col">For sale</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Brand</td>
+                <td>@product.Series</td>
+                <td>@product.Model</td>
+                <td>@product.Price</td>
+                <td>@Enum.GetName(product.Availability)</td>
+                <td>@product.Quantity</td>
+                <td>@product.ProductTypeName</td>
+                <td>@product.CategoryName</td>
+                <td>@(product.IsPublic ? "Yes" : "No")</td>
+                <td>
+                    <a asp-area="" asp-controller="Products" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger float-right ml-3 mb-3">Delete</a>
+                    <a asp-area="" asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning float-right ml-3 mb-3">Edit</a>
+                    <a asp-area="Admin" asp-controller="Products" asp-action="ChangeVisibility" asp-route-id="@product.Id" class="btn btn-info float-right ml-3">@(product.IsPublic ? "Take off shelf" : "Put for sale")</a>
+                    <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary float-right ml-3">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
