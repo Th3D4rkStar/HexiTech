@@ -1,12 +1,8 @@
-﻿using System.Net;
-using HexiTech.Data.Models;
-
-namespace HexiTech.Controllers
+﻿namespace HexiTech.Controllers
 {
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Infrastructure.Extensions;
     using AutoMapper;
@@ -82,10 +78,18 @@ namespace HexiTech.Controllers
         [Authorize]
         public IActionResult Add()
         {
+            var availabilityOptions = new List<AvailabilityEnumModel>()
+            {
+                new() { ProductAvailability = Data.Enums.ProductAvailability.Available },
+                new() { ProductAvailability = Data.Enums.ProductAvailability.AtWarehouse },
+                new() { ProductAvailability = Data.Enums.ProductAvailability.OutOfStock },
+            };
+
             return View(new ProductFormModel
             {
                 Categories = this.GetProductCategories(),
-                ProductTypes = this.GetProductTypes()
+                ProductTypes = this.GetProductTypes(),
+                AvailabilityOptions = availabilityOptions
             });
         }
 
@@ -168,8 +172,6 @@ namespace HexiTech.Controllers
 
         public IActionResult Edit(int id)
         {
-            var userId = this.User.Id();
-
             var product = this.products.Details(id);
 
             if (!User.IsAdmin())
@@ -178,6 +180,10 @@ namespace HexiTech.Controllers
             }
 
             var productForm = this.mapper.Map<ProductFormModel>(product);
+
+            productForm.AvailabilityOptions.Add(new AvailabilityEnumModel { ProductAvailability = Data.Enums.ProductAvailability.Available });
+            productForm.AvailabilityOptions.Add(new AvailabilityEnumModel { ProductAvailability = Data.Enums.ProductAvailability.AtWarehouse });
+            productForm.AvailabilityOptions.Add(new AvailabilityEnumModel { ProductAvailability = Data.Enums.ProductAvailability.OutOfStock });
 
             productForm.Categories = this.products.AllCategories();
             productForm.ProductTypes = this.products.AllProductTypes();
@@ -234,11 +240,18 @@ namespace HexiTech.Controllers
 
             return RedirectToAction(nameof(Details), new { id });
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
+            if (!User.IsAdmin())
+            {
+                TempData[FailureMessageKey] = "Unauthorized!";
+
+                return RedirectToAction(nameof(All));
+            }
+
             if (id <= 0)
             {
                 TempData[FailureMessageKey] = "Invalid product Id.";

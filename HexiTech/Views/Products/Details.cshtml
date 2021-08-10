@@ -59,14 +59,14 @@
 
                     <form method="get" action="cart.html">
                         @*<div class="form-group">
-                            <label for="colors">Color:</label>
-                            <select class="custom-select" id="colors">
-                                <option selected>Select</option>
-                                <option value="1">Blue</option>
-                                <option value="2">Red</option>
-                                <option value="3">Green</option>
-                            </select>
-                        </div>*@
+                                <label for="colors">Color:</label>
+                                <select class="custom-select" id="colors">
+                                    <option selected>Select</option>
+                                    <option value="1">Blue</option>
+                                    <option value="2">Red</option>
+                                    <option value="3">Green</option>
+                                </select>
+                            </div>*@
                         <div class="form-group">
                             <label>Quantity:</label>
                             <div class="input-group mb-3">
@@ -83,9 +83,22 @@
                                 </div>
                             </div>
                         </div>
-                        <a asp-controller="Order" asp-action="Cart" asp-route-id="quantity" class="btn btn-success btn-lg btn-block text-uppercase">
-                            <i class="fa fa-shopping-cart"></i> Add To Cart
-                        </a>
+                        @{
+                            if (Enum.GetName(@Model.Availability) == "OutOfStock")
+                            {
+                                <a asp-controller="Order" asp-action="Cart" asp-route-id="quantity" class="btn btn-success btn-lg btn-block text-uppercase disabled">
+                                    <i class="fa fa-shopping-cart"></i> Add To Cart
+                                </a>
+
+                            }
+                            else
+                            {
+                                <a asp-controller="Order" asp-action="Cart" asp-route-id="quantity" class="btn btn-success btn-lg btn-block text-uppercase">
+                                    <i class="fa fa-shopping-cart"></i> Add To Cart
+                                </a>
+
+                            }
+                        }
                     </form>
                     <div class="product_rassurance">
                         <ul class="list-inline">

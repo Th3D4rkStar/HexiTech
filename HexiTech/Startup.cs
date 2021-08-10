@@ -65,9 +65,6 @@ namespace HexiTech
                     .UseHsts();
             }
 
-            //db.Database.EnsureDeleted();
-            //db.Database.EnsureCreated();
-
             app.UseHttpsRedirection()
                 .UseStaticFiles()
                 .UseRouting()

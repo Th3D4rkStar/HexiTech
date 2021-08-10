@@ -1,4 +1,5 @@
-﻿@model HexiTech.Models.Products.ProductFormModel
+﻿@using HexiTech.Data.Enums
+@model HexiTech.Models.Products.ProductFormModel
 
 <div class="row">
     <div class="col-sm-12 col-lg-8 col-xl-12">
@@ -67,20 +68,18 @@
                 <div class="form-group col-md-6">
                     <label class="col-sm-2">Availability:</label>
                     <div class="col-sm-10">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" asp-for="Availability" name="Availability" value="1">
-                            <label class="form-check-label" asp-for="Availability">Available.</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" asp-for="Availability" name="Availability" value="2">
-                            <label class="form-check-label" asp-for="Availability">At warehouse.</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" asp-for="Availability" name="Availability" value="3">
-                            <label class="form-check-label" asp-for="Availability">Out of stock.</label>
-                        </div>
-                        <span asp-validation-for="Availability" class="small text-danger"></span>
+                        @for (int i = 1; i <= Model.AvailabilityOptions.Count; i++)
+                        {
+                            <div class="form-check form-check-inline">
+                                @if ((int)Model.Availability == i)
+                                {<input class="form-check-input" type="radio" asp-for="Availability" name="Availability" value="@i" checked="">}
+                                else
+                                {<input class="form-check-input" type="radio" asp-for="Availability" name="Availability" value="@i">}
+                                <label class="form-check-label" asp-for="Availability">@Model.AvailabilityOptions[i - 1].ProductAvailability.GetDisplayName()</label>
+                            </div>
+                        }
                     </div>
+                    <span asp-validation-for="Availability" class="small text-danger"></span>
                 </div>
                 <div class="form-group col-md-3">
                     <label asp-for="Price"></label>

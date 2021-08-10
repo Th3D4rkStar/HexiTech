@@ -55,5 +55,7 @@
         public int ProductTypeId { get; init; }
 
         public IEnumerable<ProductTypeServiceModel> ProductTypes { get; set; } = new List<ProductTypeServiceModel>();
+
+        public List<AvailabilityEnumModel> AvailabilityOptions { get; set; } = new List<AvailabilityEnumModel>();
     }
 }

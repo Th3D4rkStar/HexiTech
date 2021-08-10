@@ -1,4 +1,6 @@
-﻿namespace HexiTech.Areas.Admin.Controllers
+﻿using HexiTech.Infrastructure.Extensions;
+
+namespace HexiTech.Areas.Admin.Controllers
 {
     using Services.Products;
     using Microsoft.AspNetCore.Mvc;

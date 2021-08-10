@@ -44,18 +44,19 @@
                 <td>
                     <a asp-area="Admin" asp-controller="Products" asp-action="ChangeVisibility" asp-route-id="@product.Id" class="btn btn-info float-right ml-3">@(product.IsPublic ? "Take off shelf" : "Put for sale")</a>
                     <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary float-right ml-3">View</a>
-                    <a href="#confirmDelete" class="btn btn-danger float-right ml-3 mt-3" data-toggle="modal">Delete</a>
+                    @{ var deleteModal = "deleteModal" + product.Id; }
+                    <button type="button" class="btn btn-danger float-right ml-3 mt-3" data-toggle="modal" data-target="#@deleteModal">Delete</button>
                     <a asp-area="" asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning float-right ml-3 mt-3">Edit</a>
                 </td>
             </tr>
 
             <!-- Confirm Delete Modal -->
-            <div id="confirmDelete" class="modal fade">
+            <div id="@deleteModal" class="modal fade">
                 <div class="modal-dialog modal-confirm">
                     <div class="modal-content">
                         <div class="modal-header flex-column">
                             <div class="icon-box">
-                                <i class="material-icons">&#xE5CD</i>
+                                <i class="material-icons">&#xE5CD;</i>
                             </div>
                             <h4 class="modal-title w-100">Are you sure?</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
