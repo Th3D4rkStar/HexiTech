@@ -417,7 +417,7 @@ namespace HexiTech.Data.Migrations
                     b.HasOne("HexiTech.Data.Models.Product", "Product")
                         .WithMany("ProductReviews")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HexiTech.Data.Migrations
 {
     [DbContext(typeof(HexiTechDbContext))]
-    [Migration("20210808051125_InitialSetup")]
+    [Migration("20210810030556_InitialSetup")]
     partial class InitialSetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -419,7 +419,7 @@ namespace HexiTech.Data.Migrations
                     b.HasOne("HexiTech.Data.Models.Product", "Product")
                         .WithMany("ProductReviews")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");

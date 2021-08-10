@@ -164,6 +164,22 @@
             return true;
         }
 
+        public bool Delete(int productId)
+        {
+            Product product = this.db.Products.Find(productId);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            this.db.Products.Remove(product);
+
+            this.db.SaveChanges();
+
+            return true;
+        }
+
         public void ChangeVisibility(int productId)
         {
             var product = this.db.Products.Find(productId);

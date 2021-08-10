@@ -53,6 +53,8 @@
             string description,
             string specifications);
 
+        bool Delete(int productId);
+
         void ChangeVisibility(int productId);
 
         IEnumerable<string> AllBrands();

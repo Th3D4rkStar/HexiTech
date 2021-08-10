@@ -1,4 +1,7 @@
-﻿namespace HexiTech.Controllers
+﻿using System.Net;
+using HexiTech.Data.Models;
+
+namespace HexiTech.Controllers
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -87,8 +90,8 @@
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public IActionResult Add(ProductFormModel product)
         {
             if (!this.db.Categories.Any(c => c.Id == product.CategoryId))
@@ -231,27 +234,30 @@
 
             return RedirectToAction(nameof(Details), new { id });
         }
-
-
-        // GET: ProductsController/Delete/5
-        public IActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProductsController/Delete/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id)
         {
-            try
+            if (id <= 0)
             {
+                TempData[FailureMessageKey] = "Invalid product Id.";
+
                 return RedirectToAction(nameof(All));
             }
-            catch
+
+            var deleted = products.Delete(id);
+
+            if (!deleted)
             {
-                return View();
+                TempData[FailureMessageKey] = "Product not found.";
+
+                return RedirectToAction(nameof(All));
             }
+
+            TempData[GlobalMessageKey] = "Product successfully deleted!";
+
+            return RedirectToAction(nameof(All));
         }
     }
 }

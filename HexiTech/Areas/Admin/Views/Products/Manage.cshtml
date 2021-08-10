@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ProductServiceModel>
+
+@{
+    ViewBag.Title = "Products Administration";
+}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet " href="~/css/ProductDeletion.css" />
+
+<h1 class="text-center">Manage Products</h1>
+
+<table class="table table-striped">
+    <thead class="thead-dark text-center">
+
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Series</th>
+            <th scope="col">Model</th>
+            <th scope="col">Price</th>
+            <th scope="col">Availability</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Type</th>
+            <th scope="col">Category</th>
+            <th scope="col">For sale</th>
+            <th scope="col">Options</th>
+        </tr>
+    </thead>
+
+    <tbody class="text-center">
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Brand</td>
+                <td>@product.Series</td>
+                <td>@product.Model</td>
+                <td>$@product.Price</td>
+                <td>@Enum.GetName(product.Availability)</td>
+                <td>@product.Quantity</td>
+                <td>@product.ProductTypeName</td>
+                <td>@product.CategoryName</td>
+                <td>@(product.IsPublic ? "Yes" : "No")</td>
+                <td>
+                    <a asp-area="Admin" asp-controller="Products" asp-action="ChangeVisibility" asp-route-id="@product.Id" class="btn btn-info float-right ml-3">@(product.IsPublic ? "Take off shelf" : "Put for sale")</a>
+                    <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary float-right ml-3">View</a>
+                    <a href="#confirmDelete" class="btn btn-danger float-right ml-3 mt-3" data-toggle="modal">Delete</a>
+                    <a asp-area="" asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning float-right ml-3 mt-3">Edit</a>
+                </td>
+            </tr>
+
+            <!-- Confirm Delete Modal -->
+            <div id="confirmDelete" class="modal fade">
+                <div class="modal-dialog modal-confirm">
+                    <div class="modal-content">
+                        <div class="modal-header flex-column">
+                            <div class="icon-box">
+                                <i class="material-icons">&#xE5CD</i>
+                            </div>
+                            <h4 class="modal-title w-100">Are you sure?</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete this product? This process cannot be undone.</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <form asp-area="Admin" asp-controller="Products" asp-action="Delete" asp-route-id="@product.Id">
+                                <input type="submit" class="btn btn-danger" value="Delete!">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </tbody>
+</table>
+<hr />

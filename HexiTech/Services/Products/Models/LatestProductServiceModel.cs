@@ -4,14 +4,14 @@
     {
         public int Id { get; init; }
 
-        public string Brand { get; }
+        public string Brand { get; init; }
 
-        public string Series { get; set; }
+        public string Series { get; init; }
 
-        public string Model { get; }
+        public string Model { get; init; }
 
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; init; }
 
-        public decimal Price { get; }
+        public decimal Price { get; init; }
     }
 }

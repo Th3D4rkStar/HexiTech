@@ -4,7 +4,7 @@
     {
         string Brand { get; }
 
-        public string Series { get; set; }
+        public string Series { get; }
 
         string Model { get; }
 

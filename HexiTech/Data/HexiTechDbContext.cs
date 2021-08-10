@@ -54,8 +54,7 @@
                 .Entity<ProductReview>()
                 .HasOne(p => p.Product)
                 .WithMany(pr => pr.ProductReviews)
-                .HasForeignKey(p => p.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(p => p.ProductId);
 
             base.OnModelCreating(builder);
         }

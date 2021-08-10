@@ -13,7 +13,7 @@
         public string Model { get; set; }
 
         public string ImageUrl { get; set; }
-
+        
         public decimal Price { get; set; }
 
         public ProductAvailability Availability { get; set; }
