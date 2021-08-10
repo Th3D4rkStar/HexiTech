@@ -4,9 +4,10 @@
     ViewData["Title"] = "All Products";
 }
 
-@* TODO: Configure filtering and sorting. Add apply filters button. Add availability status. *@
+@* TODO: Configure filtering and sorting. Add apply filters button. *@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet " href="~/css/AllProducts.css" />
 <link rel="stylesheet " href="~/css/ProductDeletion.css" />
 
 <h1 class="text-center">All Products</h1>
@@ -84,15 +85,45 @@
     {
         <div class="col-md-4">
             <div class="card mb-3">
-                <img class="card-img-top" src="@product.ImageUrl" alt="@product.Brand @product.Model - @product.Price (@product.CategoryName @product.ProductTypeName)">
+                <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">
+                    <img class="card-img-top" src="@product.ImageUrl" alt="@product.Brand @product.Model - @product.Price (@product.CategoryName @product.ProductTypeName)">
+                </a>
                 <div class="card-body text-center">
                     <h5 class="card-title text-center">
-                        @product.Brand @if (product.Series != null)
-                        {@product.Series} @product.Model<br />[$@product.Price]
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">
+
+                            @product.Brand
+                            @if (product.Series != null)
+                            {@product.Series}
+                            @product.Model
+                        </a>
+                        <hr />
+                        <i class="priceBrackets">
+                            [<i class="price">$@product.Price</i>]
+                        </i>
+                        <div class="outOfStock">
+                            @{
+                                if (Enum.GetName(product.Availability) == "OutOfStock")
+                                {
+                                    @:Out of stock.
+
+                                    <a asp-controller="Order" asp-action="Cart" asp-route-quantity="" class="btn btn-success btn-lg btn-block text-uppercase mt-1 mb-n3 disabled">
+                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                    </a>
+                                }
+
+                                else
+                                {
+                                    <a asp-controller="Order" asp-action="Cart" asp-route-quantity="" class="btn btn-success btn-lg btn-block mt-2 mb-n3">
+                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                    </a>
+                                }
+                            }
+                        </div>
                     </h5>
-                    <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">View More</a>
                     @if (ViewBag.AllowProductEdit == true || User.IsAdmin())
                     {
+                        <hr />
                         <a asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
                         <a href="#confirmDelete" class="btn btn-danger" data-toggle="modal">Delete</a>
                     }

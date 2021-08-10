@@ -1,0 +1,18 @@
+﻿.priceBrackets {
+    font-size: 120%;
+}
+
+.priceBrackets .price {
+    color: #008000;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.outOfStock {
+    color: #dc3545;
+    text-align: center;
+    font-weight: bold;
+    font-size: 100%;
+    margin-bottom: 0;
+}
