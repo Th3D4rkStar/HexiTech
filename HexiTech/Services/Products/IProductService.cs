@@ -12,6 +12,8 @@
             string searchTerm = null,
             ProductSorting sorting = ProductSorting.TimeAdded,
             int currentPage = 1,
+            int categoryId = 0,
+            int productTypeId = 0,
             int productsPerPage = int.MaxValue,
             bool publicOnly = true);
 

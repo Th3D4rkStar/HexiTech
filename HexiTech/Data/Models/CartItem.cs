@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using Enums;
 
     public class CartItem
     {
@@ -14,6 +15,9 @@
 
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        public ProductAvailability Availability { get; set; }
 
         [Required]
         [Range(0, 1000)]

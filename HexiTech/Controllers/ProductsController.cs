@@ -33,6 +33,8 @@
                 query.SearchTerm,
                 query.Sorting,
                 query.CurrentPage,
+                query.CategoryId,
+                query.ProductTypeId,
                 AllProductsQueryModel.ProductsPerPage
             );
 
@@ -102,10 +104,15 @@
             {
                 this.ModelState.AddModelError(nameof(product.CategoryId), "Category does not exist.");
             }
+            if (!this.db.ProductTypes.Any(pt => pt.Id == product.ProductTypeId))
+            {
+                this.ModelState.AddModelError(nameof(product.ProductTypeId), "Product type does not exist.");
+            }
 
             if (!ModelState.IsValid)
             {
-                product.Categories = this.GetProductCategories();
+                product.Categories = this.products.AllCategories();
+                product.ProductTypes = this.products.AllProductTypes();
 
                 return View(product);
             }
@@ -172,21 +179,25 @@
 
         public IActionResult Edit(int id)
         {
-            var product = this.products.Details(id);
-
             if (!User.IsAdmin())
             {
                 return Unauthorized();
             }
 
+            var product = this.products.Details(id);
+
             var productForm = this.mapper.Map<ProductFormModel>(product);
 
-            productForm.AvailabilityOptions.Add(new AvailabilityEnumModel { ProductAvailability = Data.Enums.ProductAvailability.Available });
-            productForm.AvailabilityOptions.Add(new AvailabilityEnumModel { ProductAvailability = Data.Enums.ProductAvailability.AtWarehouse });
-            productForm.AvailabilityOptions.Add(new AvailabilityEnumModel { ProductAvailability = Data.Enums.ProductAvailability.OutOfStock });
+            var availabilityOptions = new List<AvailabilityEnumModel>()
+            {
+                new() { ProductAvailability = Data.Enums.ProductAvailability.Available },
+                new() { ProductAvailability = Data.Enums.ProductAvailability.AtWarehouse },
+                new() { ProductAvailability = Data.Enums.ProductAvailability.OutOfStock },
+            };
 
             productForm.Categories = this.products.AllCategories();
             productForm.ProductTypes = this.products.AllProductTypes();
+            productForm.AvailabilityOptions = availabilityOptions;
 
             return View(productForm);
         }

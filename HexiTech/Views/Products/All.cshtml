@@ -4,7 +4,7 @@
     ViewData["Title"] = "All Products";
 }
 
-@* TODO: Configure filtering and sorting. Add apply filters button. *@
+@* TODO: Add apply filters button. *@
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet " href="~/css/AllProducts.css" />
@@ -46,7 +46,7 @@
 
         <div class="form-group col-md-4">
             <div class="form-group">
-                <label asp-for="CategoryId"></label>
+                <label asp-for="CategoryId">Select category:</label>
                 <select asp-for="CategoryId" id="selectCategory" class="form-control">
                     <option selected value="0">All</option>
                     @foreach (var category in Model.Categories)
@@ -60,7 +60,7 @@
 
         <div class="form-group col-md-4">
             <div class="form-group">
-                <label asp-for="ProductTypeId">Type</label>
+                <label asp-for="ProductTypeId">Select type:</label>
                 <select asp-for="ProductTypeId" id="selectType" class="form-control">
                     <option selected value="0">All</option>
                     @foreach (var productType in Model.ProductTypes)
@@ -71,6 +71,14 @@
                 <span asp-validation-for="ProductTypeId" class="small text-danger"></span>
             </div>
         </div>
+        <div class="row col-12">
+            <div class="form-group col-2">
+                <button class="btn btn-info" type="submit">Apply filters</button>
+            </div>
+            <a class="form-group col-2 ml-n5" asp-controller="Products" asp-action="All">
+                <button class="btn btn-info" type="button">Clear filters</button>
+            </a>
+        </div>
     </div>
 </form>
 
@@ -80,7 +88,7 @@
     <h2 class="text-center">No products found by the given criteria!</h2>
 }
 
-<div class="row">
+<div class="card-group">
     @foreach (var product in Model.Products)
     {
         <div class="col-md-4">
@@ -105,13 +113,13 @@
                                 {
                                     @:Out of stock.
 
-                                    <a asp-controller="Order" asp-action="Cart" asp-route-quantity="" class="btn btn-success btn-lg btn-block text-uppercase mt-1 mb-n3 disabled">
+                                    <a asp-controller="Cart" asp-action="Cart" asp-route-quantity="" class="btn btn-success btn-lg btn-block text-uppercase mt-1 mb-n3 disabled">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                     </a>
                                 }
                                 else
                                 {
-                                    <a asp-controller="Order" asp-action="Cart" asp-route-quantity="" class="btn btn-success btn-lg btn-block mt-2 mb-n3">
+                                    <a asp-controller="Cart" asp-action="Cart" asp-route-quantity="" class="btn btn-success btn-lg btn-block mt-2 mb-n3">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                     </a>
                                 }
@@ -202,7 +210,7 @@
         $(document).ready(function() {
             $('#selectType').prop('disabled', true);
 
-            $('#selectCategory').on('change',
+            $('#selectCategory').on('mouseover click change',
                 function () {
                     var t = $("input[name='__RequestVerificationToken']").val();
                     $.ajax({

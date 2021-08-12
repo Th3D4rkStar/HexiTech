@@ -1,4 +1,6 @@
-﻿<h1 class="jumbotron text-center">Shopping cart</h1>
+﻿@model HexiTech.Data.Models.ShoppingCart
+
+<h1 class="jumbotron text-center">Shopping cart</h1>
 
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -31,6 +33,15 @@
                             <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
                         </tr>
                         <tr>
+                            @*@foreach (var item in Model.CartItems)
+                            {
+                                <td><img src=@item.ImageUrl/></td>
+                                <td>@item.Name</td>
+                                <td>@item.Quantity</td>
+                                <td><input class="form-control" type="text" value="1"/></td>
+                                <td class="text-right">$@item.Price</td>
+                                <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button></td>
+                            }*@
                         </tr>
                         <tr>
                             <td></td>

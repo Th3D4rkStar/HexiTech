@@ -28,6 +28,8 @@
             string searchTerm = null,
             ProductSorting sorting = ProductSorting.TimeAdded,
             int currentPage = 1,
+            int categoryId = 0,
+            int productTypeId = 1,
             int productsPerPage = int.MaxValue,
             bool publicOnly = true)
         {
@@ -39,11 +41,21 @@
                 productsQuery = productsQuery.Where(p => p.Brand == brand);
             }
 
+            if (categoryId != 0)
+            {
+                productsQuery = productsQuery.Where(p => p.CategoryId == categoryId);
+            }
+
+            if (productTypeId != 0)
+            {
+                productsQuery = productsQuery.Where(p => p.ProductTypeId == productTypeId);
+            }
+
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 productsQuery = productsQuery.Where(p =>
-                    (p.Brand + " " + p.Model).ToLower().Contains(searchTerm.ToLower()) ||
-                    p.Description.ToLower().Contains(searchTerm.ToLower()));
+                    (p.Brand + " " + p.Series + " " + p.Model).ToLower().Contains(searchTerm.ToLower()) ||
+                    p.Description.ToLower().Contains(searchTerm.ToLower()) || p.Specifications.ToLower().Contains(searchTerm.ToLower()));
             }
 
             productsQuery = sorting switch
