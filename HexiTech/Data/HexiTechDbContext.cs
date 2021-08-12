@@ -19,7 +19,11 @@
 
         public DbSet<ProductReview> ProductReviews { get; init; }
 
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
         public DbSet<CartItem> CartItems { get; init; }
+
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,30 +35,42 @@
         {
             builder
                 .Entity<Product>()
-                .HasOne(t => t.ProductType)
-                .WithMany(p => p.Products)
-                .HasForeignKey(t => t.ProductTypeId)
+                .HasOne(p => p.ProductType)
+                .WithMany(pt => pt.Products)
+                .HasForeignKey(p => p.ProductTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .Entity<Product>()
-                .HasOne(c => c.Category)
-                .WithMany(p => p.Products)
-                .HasForeignKey(c => c.CategoryId)
+                .HasOne(p => p.Category)
+                .WithMany(c => c.Products)
+                .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .Entity<ProductType>()
-                .HasOne(c => c.Category)
-                .WithMany(t => t.ProductTypes)
-                .HasForeignKey(c => c.CategoryId)
+                .HasOne(pt => pt.Category)
+                .WithMany(c => c.ProductTypes)
+                .HasForeignKey(pt => pt.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .Entity<ProductReview>()
-                .HasOne(p => p.Product)
-                .WithMany(pr => pr.ProductReviews)
-                .HasForeignKey(p => p.ProductId);
+                .HasOne(pr => pr.Product)
+                .WithMany(p => p.ProductReviews)
+                .HasForeignKey(pr => pr.ProductId);
+            
+            builder
+                .Entity<CartItem>()
+                .HasOne(ci => ci.ShoppingCart)
+                .WithMany(sc => sc.CartItems)
+                .HasForeignKey(ci => ci.ShoppingCartId);
+
+            builder
+                .Entity<Order>()
+                .HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId);
 
             base.OnModelCreating(builder);
         }
