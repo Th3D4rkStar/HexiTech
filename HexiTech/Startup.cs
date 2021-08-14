@@ -38,6 +38,8 @@ namespace HexiTech
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<HexiTechDbContext>();
 
+            services.AddSession();
+
             services.AddAutoMapper(typeof(Startup));
 
             services.AddMemoryCache();
@@ -67,6 +69,7 @@ namespace HexiTech
 
             app.UseHttpsRedirection()
                 .UseStaticFiles()
+                .UseSession()
                 .UseRouting()
                 .UseAuthentication()
                 .UseAuthorization()

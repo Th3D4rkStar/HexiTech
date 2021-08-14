@@ -57,7 +57,7 @@
                         }
                     </div>
 
-                    <form method="get" action="cart.html">
+                    <form method="post">
                         @*<div class="form-group">
                                 <label for="colors">Color:</label>
                                 <select class="custom-select" id="colors">
@@ -81,18 +81,17 @@
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </div>
-                                <var hidden="">@Model.Id</var>
                             </div>
                             @{
                                 if (Enum.GetName(@Model.Availability) == "OutOfStock")
                                 {
-                                    <a class="btn btn-success btn-lg btn-block text-uppercase disabled" asp-controller="Cart" asp-action="AddItemToCart" asp-route-quantity="quantity" asp-route-name="@Model.Brand @Model.Series @Model.Model" asp-route-imageUrl="@Model.ImageUrl" asp-route-availability="@Model.Availability" asp-route-price="@Model.Price" asp-route-productStock="@Model.Quantity" asp-route-productType="@Model.ProductTypeId">
+                                    <a class="btn btn-success btn-lg btn-block text-uppercase disabled">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                     </a>
                                 }
                                 else
                                 {
-                                    <button class="btn btn-success btn-lg btn-block text-uppercase" asp-controller="Cart" asp-action="AddItemToCart" asp-route-data="data" asp-route-name="@Model.Brand @Model.Series @Model.Model" asp-route-imageUrl="@Model.ImageUrl" asp-route-availability="@Model.Availability" asp-route-price="@Model.Price" asp-route-productStock="@Model.Quantity" asp-route-productType="@Model.ProductTypeId">
+                                    <button class="btn btn-success btn-lg btn-block text-uppercase" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                     </button>
                                 }
@@ -123,10 +122,12 @@
                                     @:(@totalSum.ToString("F1")/5)
 
                                     for (int i = 0; i < Math.Floor(totalSum); i++)
-                                    {<i class="fa fa-star"></i> }
+                                    {<i class="fa fa-star"></i>
+                                    }
 
                                     for (int i = 0; i < 5 - Math.Floor(totalSum); i++)
-                                    {<i class="fa fa-star-o"></i> }
+                                    {<i class="fa fa-star-o"></i>
+                                    }
 
                                 }
 

@@ -2,6 +2,9 @@
 {
     using Microsoft.AspNetCore.Mvc;
     using HexiTech.Data.Models;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Helpers;
     using Services.Products;
     using Data;
 
@@ -9,6 +12,8 @@
     {
         private readonly HexiTechDbContext db;
         private readonly IProductService products;
+        public List<CartItem> cartItems;
+        public decimal total;
 
         public CartController(HexiTechDbContext db, IProductService products)
         {
@@ -19,26 +24,65 @@
         [HttpGet]
         public IActionResult Cart()
         {
-            return View();
+            cartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("cartItems");
+
+            if (cartItems != null)
+            {
+                total = cartItems.Sum(ci => ci.Product.Price * ci.Quantity);
+            }
+
+            var cart = new ShoppingCart
+            {
+                CartItems = cartItems
+            };
+
+            return View(cart);
         }
 
-        [HttpPost]
-        public IActionResult AddItemToCart(int id, int quantity)
+        public IActionResult AddToCart(int id)
         {
             var productToAdd = products.Details(id);
 
-            var cartItem = new CartItem
+            cartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("cartItems");
+
+            if (cartItems == null)
             {
-                ImageUrl = productToAdd.ImageUrl,
-                Name = productToAdd.Series != null
-                    ? $"{productToAdd.Brand} {productToAdd.Series} {productToAdd.Model}"
-                    : $"{productToAdd.Brand} {productToAdd.Model}",
-                Availability = productToAdd.Availability,
-                Quantity = quantity,
-                Price = productToAdd.Price,
-                ItemType = productToAdd.ProductTypeName,
-                ProductId = id
-            };
+                cartItems = new List<CartItem>
+                {
+                    new()
+                    {
+                        Name = productToAdd.Series != null
+                            ? $"{productToAdd.Brand} {productToAdd.Series} {productToAdd.Model}"
+                            : $"{productToAdd.Brand} {productToAdd.Model}",
+                        Quantity = 1,
+                        ProductId = id,
+                        Product = db.Products.Find(id)
+                    }
+                };
+
+                HttpContext.Session.SetObjectAsJson("cartItems", cartItems);
+            }
+            else
+            {
+                if (!cartItems.Exists(ci => ci.ProductId == id))
+                {
+                    cartItems.Add(new CartItem
+                    {
+                        Name = productToAdd.Series != null
+                            ? $"{productToAdd.Brand} {productToAdd.Series} {productToAdd.Model}"
+                            : $"{productToAdd.Brand} {productToAdd.Model}",
+                        Quantity = 1,
+                        ProductId = id,
+                        Product = db.Products.Find(id)
+                    });
+                }
+                else
+                {
+                    cartItems.FirstOrDefault(ci => ci.ProductId == id).Quantity++;
+                }
+
+                SessionHelper.SetObjectAsJson(HttpContext.Session, "cartItems", cartItems);
+            }
 
             return RedirectToAction(nameof(Cart));
         }

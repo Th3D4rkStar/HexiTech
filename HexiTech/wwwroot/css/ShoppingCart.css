@@ -1,4 +1,13 @@
-﻿.bloc_left_price {
+﻿html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 75px;
+}
+
+.bloc_left_price {
     color: #c01508;
     text-align: center;
     font-weight: bold;
@@ -56,6 +65,13 @@
 
 .pagination {
     margin-top: 20px;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    line-height: 60px;
 }
 
 /*footer {
