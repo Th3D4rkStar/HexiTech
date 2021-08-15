@@ -3,12 +3,13 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using Data;
-    using HexiTech.Data.Models;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.DependencyInjection;
+
+    using Data;
+    using HexiTech.Data.Models;
 
     using static WebConstants;
 

@@ -1,8 +1,10 @@
-﻿namespace HexiTech.Data.Models
+﻿namespace HexiTech.Services.Cart.Models
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class CartItem
+    using HexiTech.Data.Models;
+
+    public class CartItemServiceModel
     {
         public int Id { get; set; }
 
@@ -15,8 +17,5 @@
 
         public int ProductId { get; set; }
         public Product Product { get; set; }
-
-        public int ShoppingCartId { get; set; }
-        public ShoppingCart ShoppingCart { get; set; }
     }
 }

@@ -53,5 +53,7 @@
         public string Specifications { get; set; }
 
         public IEnumerable<ProductReview> ProductReviews { get; set; } = new List<ProductReview>();
+
+        public IEnumerable<UserShoppingCart> UsersShoppingCart { get; set; } = new List<UserShoppingCart>();
     }
 }

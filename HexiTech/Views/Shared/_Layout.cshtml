@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using HexiTech.Data.Models
+@inject SignInManager<User> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -33,10 +37,22 @@
                         }
                     </ul>
                     <partial name="_LoginPartial" />
-                    <a class="btn btn-success btn-sm ml-3" asp-area="" asp-controller="Cart" asp-action="Cart">
-                        <i class="fa fa-shopping-cart"></i> Cart
-                        <span class="badge badge-light">3</span>
-                    </a>
+                    @{
+                        if (SignInManager.IsSignedIn(User))
+                        {
+                            <a class="btn btn-success btn-sm ml-3" asp-area="" asp-controller="Cart" asp-action="Cart">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span class="badge badge-light"></span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-success btn-sm ml-3" asp-area="Identity" asp-page="/Account/Login">
+                                <i class="fa fa-shopping-cart"></i>
+                                <span class="badge badge-light"></span>
+                            </a>
+                        }
+                    }
                 </div>
             </div>
         </nav>

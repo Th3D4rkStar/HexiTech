@@ -1,4 +1,6 @@
-﻿<div class="container mb-4">
+﻿@model IEnumerable<HexiTech.Services.Cart.Models.CartItemServiceModel>
+
+<div class="container mb-4">
     <div class="row">
         <div class="col-12">
             <div class="table-responsive">
@@ -14,56 +16,49 @@
                         </tr>
                     </thead>
                     <tbody>
+                    @foreach (var item in Model)
+                    {
                         <tr>
-                            <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                            <td>Product Name Dada</td>
-                            <td>In stock</td>
-                            <td><input class="form-control" type="text" value="1" /></td>
-                            <td class="text-right">124,90 €</td>
-                            <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
+                            <td><img src=@item.Product.ImageUrl width="50" height="50"/></td>
+                            <td>@item.Name</td>
+                            <td>@item.Product.Availability.</td>
+                            <td><input class="form-control" type="text" value="@item.Quantity"/></td>
+                            <td class="text-right">$@item.Product.Price</td>
+                            <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button></td>
                         </tr>
-                        @foreach (var item in Model.CartItems)
-                        {
-                            <tr>
-                                <td><img src=@item.Product.ImageUrl width="50" height="50"/></td>
-                                <td>@item.Name</td>
-                                <td>@item.Product.Availability.</td>
-                                <td><input class="form-control" type="text" value="@item.Quantity"/></td>
-                                <td class="text-right">$@item.Product.Price</td>
-                                <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="font-weight-bold"><strong>Details:</strong></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>Sub-Total:</td>
-                            <td class="text-right">255,90 €</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>Shipping:</td>
-                            <td class="text-right">6,90 €</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><strong>Total:</strong></td>
-                            <td class="text-right"><strong>346,90 €</strong></td>
-                        </tr>
+                    }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="font-weight-bold"><strong>Details:</strong></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Sub-Total:</td>
+                        <td class="text-right">255,90 €</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Shipping:</td>
+                        <td class="text-right">6,90 €</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong>Total:</strong></td>
+                        <td class="text-right"><strong>346,90 €</strong></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

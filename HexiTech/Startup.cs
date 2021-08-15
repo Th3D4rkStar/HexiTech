@@ -1,3 +1,5 @@
+using HexiTech.Services.Cart;
+
 namespace HexiTech
 {
     using Microsoft.AspNetCore.Builder;
@@ -50,6 +52,7 @@ namespace HexiTech
             });
 
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICartService, CartService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HexiTechDbContext db)

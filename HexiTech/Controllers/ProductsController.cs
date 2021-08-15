@@ -4,15 +4,16 @@
     using System.Linq;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Infrastructure.Extensions;
     using AutoMapper;
-    using Data;
+
     using HexiTech.Services.Products.Models;
-    using Models.Products;
+    using Infrastructure.Extensions;
     using Services.Products;
-
+    using Models.Products;
+    using Data;
+    
     using static WebConstants;
-
+    
     public class ProductsController : Controller
     {
         private readonly IProductService products;
@@ -135,48 +136,6 @@
             return RedirectToAction(nameof(Details), new { id = productId });
         }
 
-        public JsonResult GetCascadeCategories()
-        {
-            var cat = this.db
-                .Categories
-                .Select(c => new ProductCategoryServiceModel()
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                })
-                .ToList();
-
-            return Json(cat);
-        }
-        public JsonResult GetCascadeTypes(int catId)
-        {
-            var types = db.ProductTypes.Where(c => c.CategoryId == catId).ToList();
-
-            return Json(types);
-        }
-
-        private IEnumerable<ProductCategoryServiceModel> GetProductCategories()
-            => this.db
-                .Categories
-                .Select(c => new ProductCategoryServiceModel()
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                })
-                .ToList();
-
-        private IEnumerable<ProductTypeServiceModel> GetProductTypes()
-            => this.db
-                .ProductTypes
-                .Select(pt => new ProductTypeServiceModel()
-                {
-                    Id = pt.Id,
-                    Name = pt.Name,
-                    CategoryId = pt.CategoryId,
-                    Category = pt.Category
-                })
-                .ToList();
-
         public IActionResult Edit(int id)
         {
             if (!User.IsAdmin())
@@ -283,5 +242,47 @@
 
             return RedirectToAction(nameof(All));
         }
+
+        public JsonResult GetCascadeCategories()
+        {
+            var cat = this.db
+                .Categories
+                .Select(c => new ProductCategoryServiceModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
+
+            return Json(cat);
+        }
+        public JsonResult GetCascadeTypes(int catId)
+        {
+            var types = db.ProductTypes.Where(c => c.CategoryId == catId).ToList();
+
+            return Json(types);
+        }
+
+        private IEnumerable<ProductCategoryServiceModel> GetProductCategories()
+            => this.db
+                .Categories
+                .Select(c => new ProductCategoryServiceModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
+
+        private IEnumerable<ProductTypeServiceModel> GetProductTypes()
+            => this.db
+                .ProductTypes
+                .Select(pt => new ProductTypeServiceModel()
+                {
+                    Id = pt.Id,
+                    Name = pt.Name,
+                    CategoryId = pt.CategoryId,
+                    Category = pt.Category
+                })
+                .ToList();
     }
 }

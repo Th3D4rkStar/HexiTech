@@ -19,9 +19,7 @@
 
         public DbSet<ProductReview> ProductReviews { get; init; }
 
-        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-
-        public DbSet<CartItem> CartItems { get; init; }
+        public DbSet<UserShoppingCart> UserShoppingCarts { get; set; }
 
         public DbSet<Order> Orders { get; set; }
 
@@ -59,18 +57,10 @@
                 .HasOne(pr => pr.Product)
                 .WithMany(p => p.ProductReviews)
                 .HasForeignKey(pr => pr.ProductId);
-            
-            builder
-                .Entity<CartItem>()
-                .HasOne(ci => ci.ShoppingCart)
-                .WithMany(sc => sc.CartItems)
-                .HasForeignKey(ci => ci.ShoppingCartId);
 
             builder
-                .Entity<Order>()
-                .HasOne(o => o.User)
-                .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.UserId);
+                .Entity<UserShoppingCart>()
+                .HasKey(x => new { x.UserId, x.ProductId });
 
             base.OnModelCreating(builder);
         }
