@@ -10,10 +10,7 @@
     {
         [MaxLength(FullNameMaxLength)]
         public string FullName { get; set; }
-        
-        public int ShoppingCartId { get; set; }
-        public ShoppingCart ShoppingCart { get; set; }
 
-        public IEnumerable<Order> Orders { get; set; }
+        public IEnumerable<UserShoppingCart> UsersShoppingCart { get; set; } = new List<UserShoppingCart>();
     }
 }

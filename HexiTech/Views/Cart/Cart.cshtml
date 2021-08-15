@@ -1,4 +1,4 @@
-﻿@model HexiTech.Data.Models.ShoppingCart
+﻿@model IEnumerable<HexiTech.Services.Cart.Models.CartItemServiceModel>
 
 <h1 class="jumbotron text-center">Shopping cart</h1>
 
@@ -12,7 +12,7 @@
 
 <body>
     <div id="wrapper">
-        @{ if (Model.CartItems == null)
+        @{ if (Model == null || !Model.Any())
             {
                 <h1 class="jumbotron text-center">
                     <strong>Your shopping cart is empty!</strong><br/>
@@ -22,7 +22,6 @@
             else
             {
                 <partial name="_CartWithItems" model="@Model" />
-
             } }
     </div>
 </body>

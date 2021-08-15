@@ -2,12 +2,13 @@
 {
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
-    using HexiTech.Data.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
-
+    
+    using HexiTech.Data.Models;
+    
     using static Data.DataConstants.User;
 
     [AllowAnonymous]
@@ -32,7 +33,8 @@
         public class InputModel
         {
             [Required]
-            [EmailAddress]
+            [EmailAddress(ErrorMessage = "The e-mail provided is not valid!")]
+            [Display(Name = "E-Mail")]
             public string Email { get; set; }
 
             [Display(Name = "Full Name")]
@@ -50,10 +52,7 @@
             public string ConfirmPassword { get; set; }
         }
 
-        public void OnGet(string returnUrl = null)
-        {
-            ReturnUrl = returnUrl;
-        }
+        public void OnGet(string returnUrl = null) => ReturnUrl = returnUrl;
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {

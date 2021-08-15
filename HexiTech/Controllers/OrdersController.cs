@@ -1,6 +1,7 @@
 ﻿namespace HexiTech.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+
     using Data;
 
     public class OrdersController : Controller

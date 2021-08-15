@@ -1,87 +1,53 @@
 ﻿namespace HexiTech.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using HexiTech.Data.Models;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Helpers;
+
+    using Infrastructure.Extensions;
     using Services.Products;
+    using Services.Cart;
     using Data;
 
     public class CartController : Controller
     {
         private readonly HexiTechDbContext db;
         private readonly IProductService products;
-        public List<CartItem> cartItems;
-        public decimal total;
+        private readonly ICartService cart;
 
-        public CartController(HexiTechDbContext db, IProductService products)
+        public CartController(HexiTechDbContext db, IProductService products, ICartService cart)
         {
             this.db = db;
             this.products = products;
+            this.cart = cart;
         }
 
         [HttpGet]
         public IActionResult Cart()
         {
-            cartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("cartItems");
-
-            if (cartItems != null)
+            if (!User.Identity.IsAuthenticated)
             {
-                total = cartItems.Sum(ci => ci.Product.Price * ci.Quantity);
+                RedirectToAction();
             }
 
-            var cart = new ShoppingCart
-            {
-                CartItems = cartItems
-            };
+            var cartItems = this.cart.GetCartItemsByUser(User.Id());
 
-            return View(cart);
+            foreach (var item in cartItems)
+            {
+                item.Name = item.Product.Series != null
+                    ? $"{item.Product.Brand} {item.Product.Series} {item.Product.Model}"
+                    : $"{item.Product.Brand} + {item.Product.Model}";
+            }
+
+            return View(cartItems);
         }
 
+        [HttpPost]
         public IActionResult AddToCart(int id)
         {
-            var productToAdd = products.Details(id);
+            var isAdded = this.cart.AddToCart(User.Id(), id);
 
-            cartItems = HttpContext.Session.GetObjectFromJson<List<CartItem>>("cartItems");
-
-            if (cartItems == null)
+            if (!isAdded)
             {
-                cartItems = new List<CartItem>
-                {
-                    new()
-                    {
-                        Name = productToAdd.Series != null
-                            ? $"{productToAdd.Brand} {productToAdd.Series} {productToAdd.Model}"
-                            : $"{productToAdd.Brand} {productToAdd.Model}",
-                        Quantity = 1,
-                        ProductId = id,
-                        Product = db.Products.Find(id)
-                    }
-                };
-
-                HttpContext.Session.SetObjectAsJson("cartItems", cartItems);
-            }
-            else
-            {
-                if (!cartItems.Exists(ci => ci.ProductId == id))
-                {
-                    cartItems.Add(new CartItem
-                    {
-                        Name = productToAdd.Series != null
-                            ? $"{productToAdd.Brand} {productToAdd.Series} {productToAdd.Model}"
-                            : $"{productToAdd.Brand} {productToAdd.Model}",
-                        Quantity = 1,
-                        ProductId = id,
-                        Product = db.Products.Find(id)
-                    });
-                }
-                else
-                {
-                    cartItems.FirstOrDefault(ci => ci.ProductId == id).Quantity++;
-                }
-
-                SessionHelper.SetObjectAsJson(HttpContext.Session, "cartItems", cartItems);
+                return BadRequest();
             }
 
             return RedirectToAction(nameof(Cart));

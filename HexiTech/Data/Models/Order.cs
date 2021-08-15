@@ -1,17 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace HexiTech.Data.Models
+﻿namespace HexiTech.Data.Models
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     using Enums;
 
     public class Order
     {
         public int Id { get; set; }
-
-        public string UserId { get; set; }
-        public User User { get; set; }
 
         [Required]
         public string DateCreated { get; set; }
