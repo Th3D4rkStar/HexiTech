@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using HexiTech.Data.Models
+@using HexiTech.Services.Cart
+@inject ICartService cart;
 @inject SignInManager<User> SignInManager
 
 <!DOCTYPE html>
@@ -42,14 +44,13 @@
                         {
                             <a class="btn btn-success btn-sm ml-3" asp-area="" asp-controller="Cart" asp-action="Cart">
                                 <i class="fa fa-shopping-cart"></i> My cart
-                                <span class="badge badge-light">3</span>
+                                <span class="badge badge-light">@cart.Count(User.Id())</span>
                             </a>
                         }
                         else
                         {
                             <a class="btn btn-success btn-sm ml-3" asp-area="Identity" asp-page="/Account/Login">
                                 <i class="fa fa-shopping-cart"></i> My cart
-                                <span class="badge badge-light">3</span>
                             </a>
                         }
                     }

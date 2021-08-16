@@ -1,12 +1,13 @@
 ﻿namespace HexiTech.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Caching.Memory;
+
     using Services.Products;
     using HexiTech.Services.Products.Models;
-    using Microsoft.Extensions.Caching.Memory;
-    using Microsoft.AspNetCore.Mvc;
 
     using static WebConstants.Cache;
 

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ProductServiceModel>
+﻿@using HexiTech.Data.Enums
+@model IEnumerable<ProductServiceModel>
 
 @{
     ViewBag.Title = "Products Administration";
@@ -36,7 +37,7 @@
                 <td>@product.Series</td>
                 <td>@product.Model</td>
                 <td>$@product.Price</td>
-                <td>@Enum.GetName(product.Availability)</td>
+                <td>@product.Availability.GetDisplayName()</td>
                 <td>@product.Quantity</td>
                 <td>@product.ProductTypeName</td>
                 <td>@product.CategoryName</td>

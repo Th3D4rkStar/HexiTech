@@ -110,7 +110,7 @@
                         <form method="post">
                             <div class="outOfStock">
                                 @{
-                                    if (Enum.GetName(product.Availability) == "OutOfStock")
+                                    if (Enum.GetName(product.Availability) == "OutOfStock" || !product.IsPublic /*A bit dumb, but just in case.*/)
                                     {
                                         @:(Out of stock)
 

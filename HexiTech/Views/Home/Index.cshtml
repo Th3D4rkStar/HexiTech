@@ -1,4 +1,9 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using HexiTech.Data.Models
+@inject SignInManager<User> SignInManager;
+@inject UserManager<User> UserManager;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -10,11 +15,57 @@
 </div>
 <section class="py-5">
     <div class="container">
-        <h1>Header Placeholder</h1>
+        <h1 id="greeting" class="font-italic"></h1>
         <div>
-            <p class="lead" style="font-size: 24px; font-style: italic;">
-                "Placeholder."
+            <p class="lead" style="font-size: 30px; font-style: italic;">
+                Check out our latest products:
             </p>
         </div>
     </div>
 </section>
+
+@section Scripts
+{
+    @{if (SignInManager.IsSignedIn(User))
+        {
+            <script>
+            var clientDate = new Date();
+            var hrs = clientDate.getHours();
+
+            var greet;
+
+            if (hrs >= 5 && hrs < 12)
+                greet = 'Good Morning';
+            else if (hrs >= 12 && hrs < 18)
+                greet = 'Good Afternoon';
+            else if (hrs >= 18)
+                greet = 'Good Evening';
+            else if (hrs < 5)
+                greet = 'Good Evening';
+
+            document.getElementById('greeting').innerHTML =
+                '<b>' + greet + ", @UserManager.GetUserAsync(User).Result?.FullName!";
+            </script>
+        }
+        else
+        {
+            <script>
+                var clientDate = new Date();
+                var hrs = clientDate.getHours();
+
+                var greet;
+
+                if (hrs >= 5 && hrs < 12)
+                    greet = 'Good Morning';
+                else if (hrs >= 12 && hrs < 18)
+                    greet = 'Good Afternoon';
+                else if (hrs >= 18)
+                    greet = 'Good Evening';
+                else if (hrs < 5)
+                    greet = 'Good Evening';
+
+                document.getElementById('greeting').innerHTML =
+                    '<b>' + greet + "!";
+            </script>
+        }}
+}

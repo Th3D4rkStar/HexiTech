@@ -13,18 +13,13 @@
             this.db = db;
         }
 
-        public ActionResult Cart()
+        public ActionResult All()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult AddToCart(int id)
-        {
-            return View();
-        }
-
-        public IActionResult GetCartId()
+        public ActionResult Finalize()
         {
             return View();
         }

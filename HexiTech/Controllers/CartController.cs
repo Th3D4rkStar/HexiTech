@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace HexiTech.Controllers
+﻿namespace HexiTech.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
 
     using Infrastructure.Extensions;
     using Services.Products;
@@ -64,6 +63,32 @@ namespace HexiTech.Controllers
             var isRemoved = cart.Remove(userId, id);
 
             if (!isRemoved)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Cart));
+        }
+
+        [Authorize]
+        public IActionResult IncreaseQuantity(int id)
+        {
+            var isIncreased = cart.IncreaseQuantity(User.Id(), id);
+
+            if (!isIncreased)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Cart));
+        }
+        
+        [Authorize]
+        public IActionResult DecreaseQuantity(int id)
+        {
+            var isDecreased = cart.DecreaseQuantity(User.Id(), id);
+
+            if (!isDecreased)
             {
                 return BadRequest();
             }

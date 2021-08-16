@@ -1,16 +1,17 @@
 ﻿namespace HexiTech.Services.Products
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using System;
+    using System.Linq;
     using System.Globalization;
-    using Data;
-    using HexiTech.Data.Models;
-    using HexiTech.Models;
-    using Data.Enums;
-    using Models;
+    using System.Collections.Generic;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
+
+    using Data;
+    using Models;
+    using Data.Enums;
+    using HexiTech.Models;
+    using HexiTech.Data.Models;
 
     public class ProductService : IProductService
     {
@@ -197,6 +198,9 @@
             var product = this.db.Products.Find(productId);
 
             product.IsPublic = !product.IsPublic;
+
+            var cartItems = db.UserShoppingCarts.Where(usc => usc.ProductId == productId).ToList();
+            db.UserShoppingCarts.RemoveRange(cartItems);
 
             this.db.SaveChanges();
         }

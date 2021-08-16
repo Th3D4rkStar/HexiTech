@@ -90,9 +90,9 @@
                                     <p class="text-center font-weight-bold" style="font-size: 24px; color: #007bff; ">In stock: @Model.Quantity</p>
                                 }
 
-                                if (Enum.GetName(@Model.Availability) == "OutOfStock")
+                                if (Enum.GetName(Model.Availability) == "OutOfStock" || !Model.IsPublic)
                                 {
-                                    <a class="btn btn-success btn-lg btn-block text-uppercase disabled">
+                                    <a href="" class="btn btn-success btn-lg btn-block text-uppercase disabled">
                                         <i class="fa fa-shopping-cart"></i> Add To Cart
                                     </a>
                                 }

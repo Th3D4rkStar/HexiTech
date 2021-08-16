@@ -27,7 +27,7 @@
                 db.UserShoppingCarts
                     .FirstOrDefault(usc =>
                         usc.UserId == userId && usc.ProductId == productId)
-                        .Quantity+= quantity;
+                        .Quantity += quantity;
 
                 db.SaveChanges();
             }
@@ -64,6 +64,13 @@
             return true;
         }
 
+        public IEnumerable<CartItemServiceModel> GetCartItemsByUser(string userId)
+            => db.UserShoppingCarts
+                .Where(usc => usc.UserId == userId)
+                .OrderByDescending(usc => usc.DateAdded)
+                .ProjectTo<CartItemServiceModel>(this.mapper.ConfigurationProvider)
+                .ToList();
+
         public int Count(string userId)
         {
             int itemsCount = db.UserShoppingCarts.Count(usc => usc.UserId == userId);
@@ -71,11 +78,51 @@
             return itemsCount;
         }
 
-        public IEnumerable<CartItemServiceModel> GetCartItemsByUser(string userId)
-            => db.UserShoppingCarts
-                .Where(usc => usc.UserId == userId)
-                .OrderByDescending(usc => usc.DateAdded)
-                .ProjectTo<CartItemServiceModel>(this.mapper.ConfigurationProvider)
-                .ToList();
+        public bool IncreaseQuantity(string userId, int productId)
+        {
+            if (db.UserShoppingCarts
+                .Any(usc => usc.UserId == userId && usc.ProductId == productId))
+            {
+                if (db.UserShoppingCarts
+                        .FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId).Quantity
+                    < db.Products
+                        .FirstOrDefault(p => p.Id == productId).Quantity
+                    && db.UserShoppingCarts
+                        .FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId).Quantity
+                    < 100)
+                {
+                    db.UserShoppingCarts
+                        .FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId)
+                        .Quantity++;
+
+                    db.SaveChanges();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool DecreaseQuantity(string userId, int productId)
+        {
+            if (db.UserShoppingCarts
+                .Any(usc => usc.UserId == userId && usc.ProductId == productId))
+            {
+                if (db.UserShoppingCarts.FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId).Quantity
+                    > 1)
+                {
+                    db.UserShoppingCarts
+                        .FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId)
+                        .Quantity--;
+
+                    db.SaveChanges();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
