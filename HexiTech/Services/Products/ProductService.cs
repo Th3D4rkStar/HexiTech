@@ -81,15 +81,6 @@
             };
         }
 
-        public IEnumerable<LatestProductServiceModel> Latest()
-            => this.db
-                .Products
-                .Where(p => p.IsPublic)
-                .OrderByDescending(p => p.Id)
-                .ProjectTo<LatestProductServiceModel>(this.mapper)
-                .Take(6)
-                .ToList();
-
         public int Create(string brand, string series, string model, string imageUrl, int productTypeId, int categoryId, decimal price,
             int quantity, ProductAvailability availability, string description, string specifications)
         {

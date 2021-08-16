@@ -1,11 +1,17 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using HexiTech.Data.Models
-@inject SignInManager<User> SignInManager;
-@inject UserManager<User> UserManager;
+﻿@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+@inject HexiTechDbContext db
+@using Microsoft.AspNetCore.Identity;
+@using HexiTech.Data.Models;
+@using HexiTech.Data
+@using Microsoft.EntityFrameworkCore
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet " href="~/css/AllProducts.css" />
 
 <div class="text-center">
     <h1 class="display-4" style="font-style: italic;">Hexi-Tech</h1>
@@ -13,16 +19,110 @@
         Making sure technology is only a click away.
     </p>
 </div>
-<section class="py-5">
-    <div class="container">
-        <h1 id="greeting" class="font-italic"></h1>
-        <div>
-            <p class="lead" style="font-size: 30px; font-style: italic;">
-                Check out our latest products:
-            </p>
+<div class="row">
+    <section class="py-5 col-6">
+        <div class="container">
+            <h1 id="greeting" class="font-italic"></h1>
+            <div>
+                <p class="lead ml-n5" style="font-size: 30px; font-style: italic;">
+                    Check out our latest & greatest products:
+                </p>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+    <section class="row py-5 col-6">
+        <div class="container ml-n3 col-6">
+            <div class="recently-added">
+                <h3 class="text-center" style="color: cornsilk; ">Latest product: 🆕</h3>
+                @{
+                    if (db.Products.Any(x=>x.IsPublic))
+                    {
+                        var latestProduct = db.Products.Where(p => p.IsPublic).OrderByDescending(p => p.Id).ToList().First();
+
+                        <div class="card-group" style="background-color: lightsteelblue;">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@latestProduct.Id">
+                                        <img class="card-img-top" src="@latestProduct.ImageUrl" alt="@latestProduct.Brand @latestProduct.Model - @latestProduct.Price">
+                                    </a>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-center mb-n1">
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@latestProduct.Id">
+                                            @latestProduct.Brand
+                                            @if (latestProduct.Series != null)
+                                            {@latestProduct.Series}
+                                            @latestProduct.Model<hr />
+                                        </a>
+                                        <i class="priceBrackets">
+                                            [<i class="price">$@latestProduct.Price</i>]
+                                        </i>
+                                        <div class="outOfStock">
+                                            @if (Enum.GetName(latestProduct.Availability) == "OutOfStock")
+                                            {
+                                                @:(Out of stock)
+                                            }
+                                        </div>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <h4 class="text-center" style="color: cornsilk;">No products for sale yet.</h4>
+                    }
+                }
+            </div>
+        </div>
+        <div class="container mr-n3 col-6">
+            <div class="hot">
+                <h3 class="text-center" style="color: cornsilk;">Hot product: 🔥</h3>
+                @{
+                    if (db.Products.Any(x => x.IsPublic))
+                    {
+                        var hotProduct = db.Products.Where(p => p.IsPublic).OrderByDescending(p => p.ProductReviews.Count()).ToList().First();
+
+                        <div class="card-group" style="background-color: lightsteelblue;">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@hotProduct.Id">
+                                        <img class="card-img-top" src="@hotProduct.ImageUrl" alt="@hotProduct.Brand @hotProduct.Model - @hotProduct.Price">
+                                    </a>
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title text-center mb-n1">
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@hotProduct.Id">
+                                            @hotProduct.Brand
+                                            @if (hotProduct.Series != null)
+                                            {
+                                                @hotProduct.Series
+                                            }
+                                            @hotProduct.Model<hr />
+                                        </a>
+                                        <i class="priceBrackets">
+                                            [<i class="price">$@hotProduct.Price</i>]
+                                        </i>
+                                        <div class="outOfStock">
+                                            @if (Enum.GetName(hotProduct.Availability) == "OutOfStock")
+                                            {
+                                                @:(Out of stock)
+                                            }
+                                        </div>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <h4 class="text-center" style="color: cornsilk;">No products for sale yet.</h4>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+</div>
 
 @section Scripts
 {

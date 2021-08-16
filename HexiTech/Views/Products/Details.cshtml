@@ -119,12 +119,12 @@
                                 if (Model.ProductReviews.Any())
                                 {
                                     <var hidden="">
-                                        @{var ratSum = 0.0M;
+                                        @{var ratingSum = 0.0M;
                                             foreach (var review in Model.ProductReviews)
                                             {
-                                                ratSum += (int)Enum.Parse(typeof(ReviewRatings), Enum.GetName(review.Rating));
+                                                ratingSum += (int)Enum.Parse(typeof(ReviewRatings), Enum.GetName(review.Rating));
                                             }
-                                            decimal totalSum = ratSum / Model.ProductReviews.Count;}
+                                            decimal totalSum = ratingSum / Model.ProductReviews.Count;}
                                     </var>
                                     @:(@totalSum.ToString("F1")/5)
 

@@ -17,9 +17,8 @@
         {
             return View();
         }
-
-        [HttpPost]
-        public ActionResult Finalize()
+        
+        public ActionResult Checkout()
         {
             return View();
         }

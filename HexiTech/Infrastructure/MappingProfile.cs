@@ -2,10 +2,10 @@
 {
     using AutoMapper;
 
+    using Models.Products;
     using HexiTech.Data.Models;
     using HexiTech.Services.Cart.Models;
     using HexiTech.Services.Products.Models;
-    using Models.Products;
 
     public class MappingProfile : Profile
     {
@@ -14,7 +14,6 @@
             this.CreateMap<Category, ProductCategoryServiceModel>();
             this.CreateMap<ProductType, ProductTypeServiceModel>();
 
-            this.CreateMap<Product, LatestProductServiceModel>();
             this.CreateMap<ProductDetailsServiceModel, ProductFormModel>();
             this.CreateMap<UserShoppingCart, CartItemServiceModel>();
 

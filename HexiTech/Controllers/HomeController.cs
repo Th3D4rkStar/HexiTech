@@ -24,7 +24,7 @@
 
         public IActionResult Index()
         {
-            var latestProducts = this.cache.Get<List<LatestProductServiceModel>>(LatestProductsCacheKey);
+            var latestProducts = this.cache.Get<List<ProductServiceModel>>(LatestProductsCacheKey);
 
             if (latestProducts == null)
             {

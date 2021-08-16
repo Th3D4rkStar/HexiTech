@@ -1,14 +1,16 @@
 ﻿@model IEnumerable<HexiTech.Services.Cart.Models.CartItemServiceModel>
 
-<h1 class="jumbotron text-center">Shopping cart</h1>
+@{
+    ViewData["Title"] = "My cart";
+}
+
+<h1 class="jumbotron text-center" style="">Shopping cart</h1>
 
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link href="/css/ShoppingCart.css" rel="stylesheet" id="bootstrap-css">
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-
-@* TODO: Pass Cart items count to layout. *@
 
 <body>
     <div id="wrapper">

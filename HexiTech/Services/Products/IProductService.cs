@@ -17,8 +17,6 @@
             int productsPerPage = int.MaxValue,
             bool publicOnly = true);
 
-        public IEnumerable<LatestProductServiceModel> Latest();
-
         int Create(
             string brand,
             string series,
