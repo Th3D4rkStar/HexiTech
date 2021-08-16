@@ -1,4 +1,6 @@
-﻿namespace HexiTech.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace HexiTech.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
 
@@ -41,11 +43,27 @@
         }
 
         [HttpPost]
-        public IActionResult AddToCart(int id)
+        [Authorize]
+        public IActionResult AddToCart(int id, int quantity)
         {
-            var isAdded = this.cart.AddToCart(User.Id(), id);
+            var isAdded = this.cart.AddToCart(User.Id(), id, quantity);
 
             if (!isAdded)
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction(nameof(Cart));
+        }
+
+        [Authorize]
+        public IActionResult RemoveItem(int id)
+        {
+            var userId = User.Id();
+
+            var isRemoved = cart.Remove(userId, id);
+
+            if (!isRemoved)
             {
                 return BadRequest();
             }

@@ -6,7 +6,7 @@
 
     public interface ICartService
     {
-        bool AddToCart(string userId, int productId);
+        bool AddToCart(string userId, int productId, int quantity);
 
         bool Remove(string userId, int cartItemId);
 

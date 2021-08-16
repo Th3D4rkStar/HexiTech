@@ -1,77 +1,100 @@
 ﻿@model IEnumerable<HexiTech.Services.Cart.Models.CartItemServiceModel>
 
+<script src="/js/QuantityScript.js"></script>
+
 <div class="container mb-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col"> </th>
-                            <th scope="col">Product</th>
-                            <th scope="col">Available</th>
-                            <th scope="col" class="text-center">Quantity</th>
-                            <th scope="col" class="text-right">Price</th>
-                            <th> </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td><img src=@item.Product.ImageUrl width="50" height="50"/></td>
-                            <td>@item.Name</td>
-                            <td>@item.Product.Availability.</td>
-                            <td><input class="form-control" type="text" value="@item.Quantity"/></td>
-                            <td class="text-right">$@item.Product.Price</td>
-                            <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button></td>
-                        </tr>
-                    }
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="font-weight-bold"><strong>Details:</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Sub-Total:</td>
-                        <td class="text-right">255,90 €</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Shipping:</td>
-                        <td class="text-right">6,90 €</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>Total:</strong></td>
-                        <td class="text-right"><strong>346,90 €</strong></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col mb-2">
-            <div class="row">
-                <div class="col-sm-12  col-md-6">
-                    <button class="btn btn-block btn-light">Continue Shopping</button>
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col"> </th>
+                                <th scope="col">Product</th>
+                                <th scope="col">Available</th>
+                                <th scope="col" class="text-center">Quantity</th>
+                                <th scope="col" class="text-right">Price</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ decimal totalPrice = 0;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td><img src=@item.Product.ImageUrl width="50" height="50"/></td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Product.Availability.</td>
+                                        <td>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus" data-field="">
+                                                        <i class="fa fa-minus"></i>
+                                                    </button>
+                                                </div>
+                                                <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="100" value="@item.Quantity">
+                                                <div class="input-group-append">
+                                                    <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus" data-field="">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p class="text-center font-weight-bold mt-n3 mb-n3">Max: @item.Product.Quantity</p>
+                                        </td>
+                                        <td class="text-right">$@item.Product.Price</td>
+                                        <td class="text-right">
+                                            <a asp-action="RemoveItem" asp-controller="Cart" asp-route-id="@item.ProductId">
+                                                <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                            </a>
+                                        </td>
+                                    </tr> totalPrice += item.Product.Price * item.Quantity;
+                                }}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="font-weight-bold"><strong>Details:</strong></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Sub-Total:</td>
+                                <td class="text-right">$@totalPrice</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Shipping:</td>
+                                <td class="text-right">$6,90</td>
+                            </tr>
+                            @{decimal total = totalPrice + 6.90M;}
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><strong>Total:</strong></td>
+                                <td class="text-right"><strong>$@total</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-sm-12 col-md-6 text-right">
-                    <button class="btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
+            </div>
+            <div class="col mb-2">
+                <div class="row">
+                    <div class="col-sm-12  col-md-6">
+                        <button class="btn btn-block btn-light">Continue Shopping</button>
+                    </div>
+                    <div class="col-sm-12 col-md-6 text-right">
+                        <button class="btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>

@@ -41,15 +41,15 @@
                         if (SignInManager.IsSignedIn(User))
                         {
                             <a class="btn btn-success btn-sm ml-3" asp-area="" asp-controller="Cart" asp-action="Cart">
-                                <i class="fa fa-shopping-cart"></i>
-                                <span class="badge badge-light"></span>
+                                <i class="fa fa-shopping-cart"></i> My cart
+                                <span class="badge badge-light">3</span>
                             </a>
                         }
                         else
                         {
                             <a class="btn btn-success btn-sm ml-3" asp-area="Identity" asp-page="/Account/Login">
-                                <i class="fa fa-shopping-cart"></i>
-                                <span class="badge badge-light"></span>
+                                <i class="fa fa-shopping-cart"></i> My cart
+                                <span class="badge badge-light">3</span>
                             </a>
                         }
                     }

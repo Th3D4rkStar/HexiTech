@@ -1,15 +1,13 @@
-﻿
-using HexiTech.Data.Models;
-
-namespace HexiTech.Services.Cart
+﻿namespace HexiTech.Services.Cart
 {
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
 
     using Data;
     using Models;
+    using HexiTech.Data.Models;
 
     public class CartService : ICartService
     {
@@ -22,14 +20,14 @@ namespace HexiTech.Services.Cart
             this.mapper = mapper;
         }
 
-        public bool AddToCart(string userId, int productId)
+        public bool AddToCart(string userId, int productId, int quantity)
         {
             if (db.UserShoppingCarts.Any(usc => usc.UserId == userId && usc.ProductId == productId))
             {
                 db.UserShoppingCarts
                     .FirstOrDefault(usc =>
                         usc.UserId == userId && usc.ProductId == productId)
-                        .Quantity++;
+                        .Quantity+= quantity;
 
                 db.SaveChanges();
             }
@@ -38,7 +36,8 @@ namespace HexiTech.Services.Cart
                 db.UserShoppingCarts.Add(new UserShoppingCart()
                 {
                     UserId = userId,
-                    ProductId = productId
+                    ProductId = productId,
+                    Quantity = quantity
                 });
 
                 db.SaveChanges();
@@ -48,14 +47,28 @@ namespace HexiTech.Services.Cart
             return true;
         }
 
-        public bool Remove(string userId, int cartItemId)
+        public bool Remove(string userId, int productId)
         {
-            throw new System.NotImplementedException();
+            var userCart = db.UserShoppingCarts
+                    .FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId);
+
+            if (userCart == null)
+            {
+                return false;
+            }
+
+            db.UserShoppingCarts.Remove(userCart);
+
+            db.SaveChanges();
+
+            return true;
         }
 
         public int Count(string userId)
         {
-            throw new System.NotImplementedException();
+            int itemsCount = db.UserShoppingCarts.Count(usc => usc.UserId == userId);
+
+            return itemsCount;
         }
 
         public IEnumerable<CartItemServiceModel> GetCartItemsByUser(string userId)
