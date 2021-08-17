@@ -16,11 +16,6 @@
         public string Country { get; set; }
 
         [Required]
-        public string Address { get; set; }
-
-        public string Address2 { get; set; }
-
-        [Required]
         public string Postcode { get; set; }
 
         [Required]
@@ -28,6 +23,11 @@
         
         [Required]
         public string Province { get; set; }
+
+        [Required]
+        public string Address { get; set; }
+
+        public string Address2 { get; set; }
 
         [Required]
         public string PhoneNumber { get; set; }

@@ -1,7 +1,8 @@
 ﻿namespace HexiTech.Data
 {
-    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
     using Models;
 
     public class HexiTechDbContext : IdentityDbContext<User>
@@ -20,8 +21,9 @@
         public DbSet<ProductReview> ProductReviews { get; init; }
 
         public DbSet<UserShoppingCart> UserShoppingCarts { get; set; }
-
         public DbSet<Order> Orders { get; set; }
+
+        public DbSet<UserOrdersList> UserOrdersLists { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -60,7 +62,11 @@
 
             builder
                 .Entity<UserShoppingCart>()
-                .HasKey(x => new { x.UserId, x.ProductId });
+                .HasKey(usc => new { usc.UserId, usc.ProductId });
+
+            builder
+                .Entity<UserOrdersList>()
+                .HasKey(uol => new { uol.UserId, uol.OrderId });
 
             base.OnModelCreating(builder);
         }

@@ -1,26 +1,67 @@
-﻿namespace HexiTech.Controllers
+﻿using HexiTech.Infrastructure.Extensions;
+
+namespace HexiTech.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
 
     using Data;
+    using Models.Orders;
+    using Services.Orders;
+
+    using static WebConstants;
 
     public class OrdersController : Controller
     {
         private readonly HexiTechDbContext db;
+        private readonly IOrderService orders;
 
-        public OrdersController(HexiTechDbContext db)
+        public OrdersController(HexiTechDbContext db, IOrderService orders)
         {
             this.db = db;
+            this.orders = orders;
         }
 
+        [Authorize]
         public ActionResult OrdersList()
         {
             return View();
         }
-        
-        public ActionResult Checkout(string deliveryType)
+
+        [Authorize]
+        public ActionResult Checkout()
         {
             return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult Checkout(OrderFormModel order)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(order);
+            }
+
+            var userId = User.Id();
+
+            var finalized = this.orders.Finalize(userId,
+                order.FirstName,
+                order.LastName,
+                order.CompanyName,
+                order.Country,
+                order.Postcode,
+                order.City,
+                order.Province,
+                order.Address,
+                order.Address2,
+                order.PhoneNumber,
+                order.Email,
+                order.AdditionalInformation);
+
+            TempData[GlobalMessageKey] = "Your order was received! You can check your orders in your \"Orders\" tab.";
+
+            return RedirectToAction(nameof(OrdersList));
         }
     }
 }

@@ -1,4 +1,5 @@
 using HexiTech.Services.Cart;
+using HexiTech.Services.Orders;
 
 namespace HexiTech
 {
@@ -53,6 +54,7 @@ namespace HexiTech
 
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICartService, CartService>();
+            services.AddTransient<IOrderService, OrderService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, HexiTechDbContext db)

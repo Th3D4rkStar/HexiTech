@@ -1,0 +1,77 @@
+﻿namespace HexiTech.Services.Orders
+{
+    using System;
+    using System.Linq;
+    using AutoMapper;
+    using Microsoft.EntityFrameworkCore;
+
+    using Data;
+    using Cart;
+    using Data.Enums;
+    using HexiTech.Data.Models;
+
+    public class OrderService : IOrderService
+    {
+        private readonly HexiTechDbContext db;
+        private readonly ICartService cart;
+        private readonly IConfigurationProvider mapper;
+
+        public OrderService(HexiTechDbContext db, ICartService cart, IMapper mapper)
+        {
+            this.db = db;
+            this.cart = cart;
+            this.mapper = mapper.ConfigurationProvider;
+        }
+
+        public bool Finalize(string userId, string firstName, string lastName, string companyName, string country, string postCode, string city,
+            string province, string address, string address2, string phoneNumber, string email, string additionalInformation)
+        {
+            var deliveryDate = DateTime.UtcNow.AddDays(3);
+            var list = db.UserShoppingCarts
+                .Where(usc => usc.UserId == userId)
+                .Include(usc=>usc.Product)
+                .ToList();
+
+            if (list.Any(usc => usc.UserId == userId))
+            { deliveryDate.AddDays(2); }
+
+            var orderItems = cart.GetCartItemsByUser(userId);
+            foreach (var item in orderItems)
+            {
+                item.Name = item.Product.Series != null
+                    ? $"{item.Product.Brand} {item.Product.Series} {item.Product.Model}"
+                    : $"{item.Product.Brand} + {item.Product.Model}";
+            }
+
+            var orderData = new Order
+            {
+                DateCreated = DateTime.UtcNow.ToString(),
+                OrderItems = orderItems,
+                TotalPrice = db.UserShoppingCarts
+                    .Where(usc => usc.UserId == userId)
+                    .Include(usc => usc.Product)
+                    .ToList().Sum(usc => usc.Product.Price) + 6.90M,
+                DeliveryDate = deliveryDate.ToString(),
+                IsFulfilled = false,
+                FirstName = firstName,
+                LastName = lastName,
+                CompanyName = companyName,
+                Country = country,
+                Postcode = postCode,
+                City = city,
+                Province = province,
+                Address = address,
+                Address2 = address2,
+                PhoneNumber = phoneNumber,
+                Email = email,
+                AdditionalInformation = additionalInformation
+            };
+
+            db.Orders.Add(orderData);
+            db.SaveChanges();
+
+            return true;
+        }
+
+    }
+}

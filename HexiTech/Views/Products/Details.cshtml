@@ -1,6 +1,8 @@
 ﻿@using HexiTech.Data.Enums
 @using System.Linq
+@using HexiTech.Data
 @model HexiTech.Services.Products.Models.ProductDetailsServiceModel
+@inject HexiTechDbContext db;
 
 @{
     ViewData["Title"] = "Details";
@@ -90,17 +92,36 @@
                                     <p class="text-center font-weight-bold" style="font-size: 24px; color: #007bff; ">In stock: @Model.Quantity</p>
                                 }
 
-                                if (Enum.GetName(Model.Availability) == "OutOfStock" || !Model.IsPublic)
+                                if (db.UserShoppingCarts.Any(usc => usc.UserId == User.Id()) &&
+                                    db.UserShoppingCarts.Any(usc => usc.ProductId == Model.Id && usc.Quantity == Model.Quantity))
                                 {
-                                    <a href="" class="btn btn-success btn-lg btn-block text-uppercase disabled">
-                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                    </a>
+                                    if (Enum.GetName(Model.Availability) == "OutOfStock" || !Model.IsPublic)
+                                    {
+                                        <a href="" class="btn btn-success btn-lg btn-block text-uppercase disabled">
+                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-success btn-lg btn-block text-uppercase" asp-controller="Cart" asp-action="Cart">
+                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                        </a>
+                                    }
                                 }
                                 else
                                 {
-                                    <button class="btn btn-success btn-lg btn-block text-uppercase" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id" asp-route-quantity="quantity">
-                                        <i class="fa fa-shopping-cart"></i> Add To Cart
-                                    </button>
+                                    if (Enum.GetName(Model.Availability) == "OutOfStock" || !Model.IsPublic)
+                                    {
+                                        <a href="" class="btn btn-success btn-lg btn-block text-uppercase disabled">
+                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-success btn-lg btn-block text-uppercase" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id" asp-route-quantity="quantity">
+                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                        </button>
+                                    }
                                 }
                             }
                         </div>

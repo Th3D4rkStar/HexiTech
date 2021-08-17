@@ -1,4 +1,6 @@
-﻿@model HexiTech.Models.Products.AllProductsQueryModel
+﻿@using HexiTech.Data
+@model HexiTech.Models.Products.AllProductsQueryModel
+@inject HexiTechDbContext db;
 
 @{
     ViewData["Title"] = "All Products";
@@ -108,19 +110,36 @@
                         <form method="post">
                             <div class="outOfStock">
                                 @{
-                                    if (Enum.GetName(product.Availability) == "OutOfStock" || !product.IsPublic /*A bit dumb, but just in case.*/)
+                                    if (db.UserShoppingCarts.Any(usc => usc.UserId == User.Id()) &&
+                                                                        db.UserShoppingCarts.Any(usc => usc.ProductId == product.Id && usc.Quantity == product.Quantity))
                                     {
-                                        @:(Out of stock)
-
-                                        <a href="" class="btn btn-success btn-lg btn-block mt-2 mb-n3 disabled">
-                                            <i class="fa fa-shopping-cart"></i> Add To Cart
-                                        </a>
+                                        if (Enum.GetName(product.Availability) == "OutOfStock" || !product.IsPublic) /*A bit dumb, but just in case.*/
+                                        {
+                                            <a href="" class="btn btn-success btn-lg btn-block mt-2 mb-n3 disabled">
+                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn btn-success btn-lg btn-block mt-2 mb-n3" asp-controller="Cart" asp-action="Cart">
+                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                                            </a>
+                                        }
                                     }
                                     else
                                     {
-                                        <button class="btn btn-success btn-lg btn-block mt-2 mb-n3" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@product.Id" asp-route-quantity="1">
-                                            <i class="fa fa-shopping-cart"></i> Add To Cart
-                                        </button>
+                                        if (Enum.GetName(product.Availability) == "OutOfStock" || !product.IsPublic) /*A bit dumb, but just in case.*/
+                                        {
+                                            <a href="" class="btn btn-success btn-lg btn-block mt-2 mb-n3 disabled">
+                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-success btn-lg btn-block mt-2 mb-n3" asp-controller="Cart" asp-action="AddToCart" asp-route-id="@product.Id" asp-route-quantity="1">
+                                                <i class="fa fa-shopping-cart"></i> Add To Cart
+                                            </button>
+                                        }
                                     }
                                 }
                             </div>

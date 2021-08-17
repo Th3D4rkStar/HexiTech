@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HexiTech.Migrations
 {
     [DbContext(typeof(HexiTechDbContext))]
-    [Migration("20210815175850_InitialSetup")]
+    [Migration("20210817165407_InitialSetup")]
     partial class InitialSetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,24 @@ namespace HexiTech.Migrations
                     b.Property<string>("AdditionalInformation")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Address2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DateCreated")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -56,11 +74,32 @@ namespace HexiTech.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DeliveryType")
-                        .HasColumnType("int");
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsFulfilled")
                         .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Postcode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(6,2)");
@@ -68,35 +107,6 @@ namespace HexiTech.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("HexiTech.Data.Models.OrderItem", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ItemType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(6,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("HexiTech.Data.Models.Product", b =>
@@ -284,6 +294,21 @@ namespace HexiTech.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("HexiTech.Data.Models.UserOrdersList", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "OrderId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("UserOrdersLists");
+                });
+
             modelBuilder.Entity("HexiTech.Data.Models.UserShoppingCart", b =>
                 {
                     b.Property<string>("UserId")
@@ -303,6 +328,35 @@ namespace HexiTech.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("UserShoppingCarts");
+                });
+
+            modelBuilder.Entity("HexiTech.Services.Cart.Models.CartItemServiceModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartItemServiceModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -440,13 +494,6 @@ namespace HexiTech.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("HexiTech.Data.Models.OrderItem", b =>
-                {
-                    b.HasOne("HexiTech.Data.Models.Order", null)
-                        .WithMany("OrderItems")
-                        .HasForeignKey("OrderId");
-                });
-
             modelBuilder.Entity("HexiTech.Data.Models.Product", b =>
                 {
                     b.HasOne("HexiTech.Data.Models.Category", "Category")
@@ -488,6 +535,25 @@ namespace HexiTech.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("HexiTech.Data.Models.UserOrdersList", b =>
+                {
+                    b.HasOne("HexiTech.Data.Models.Order", "Order")
+                        .WithMany("UserOrdersLists")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HexiTech.Data.Models.User", "User")
+                        .WithMany("UserOrdersLists")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("HexiTech.Data.Models.UserShoppingCart", b =>
                 {
                     b.HasOne("HexiTech.Data.Models.Product", "Product")
@@ -505,6 +571,21 @@ namespace HexiTech.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HexiTech.Services.Cart.Models.CartItemServiceModel", b =>
+                {
+                    b.HasOne("HexiTech.Data.Models.Order", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("HexiTech.Data.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -568,6 +649,8 @@ namespace HexiTech.Migrations
             modelBuilder.Entity("HexiTech.Data.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
+
+                    b.Navigation("UserOrdersLists");
                 });
 
             modelBuilder.Entity("HexiTech.Data.Models.Product", b =>
@@ -584,6 +667,8 @@ namespace HexiTech.Migrations
 
             modelBuilder.Entity("HexiTech.Data.Models.User", b =>
                 {
+                    b.Navigation("UserOrdersLists");
+
                     b.Navigation("UsersShoppingCart");
                 });
 #pragma warning restore 612, 618

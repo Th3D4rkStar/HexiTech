@@ -12,12 +12,12 @@
     public class CartService : ICartService
     {
         private readonly HexiTechDbContext db;
-        private readonly IMapper mapper;
+        private readonly IConfigurationProvider mapper;
 
         public CartService(HexiTechDbContext db, IMapper mapper)
         {
             this.db = db;
-            this.mapper = mapper;
+            this.mapper = mapper.ConfigurationProvider;
         }
 
         public bool AddToCart(string userId, int productId, int quantity)
@@ -68,7 +68,7 @@
             => db.UserShoppingCarts
                 .Where(usc => usc.UserId == userId)
                 .OrderByDescending(usc => usc.DateAdded)
-                .ProjectTo<CartItemServiceModel>(this.mapper.ConfigurationProvider)
+                .ProjectTo<CartItemServiceModel>(this.mapper)
                 .ToList();
 
         public int Count(string userId)
