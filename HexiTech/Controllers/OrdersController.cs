@@ -13,12 +13,12 @@
             this.db = db;
         }
 
-        public ActionResult All()
+        public ActionResult OrdersList()
         {
             return View();
         }
         
-        public ActionResult Checkout()
+        public ActionResult Checkout(string deliveryType)
         {
             return View();
         }
