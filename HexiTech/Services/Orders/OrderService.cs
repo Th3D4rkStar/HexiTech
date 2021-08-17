@@ -29,11 +29,11 @@
             var deliveryDate = DateTime.UtcNow.AddDays(3);
             var list = db.UserShoppingCarts
                 .Where(usc => usc.UserId == userId)
-                .Include(usc=>usc.Product)
+                .Include(usc => usc.Product)
                 .ToList();
 
-            if (list.Any(usc => usc.UserId == userId))
-            { deliveryDate.AddDays(2); }
+            if (list.Any(usc => usc.Product.Availability.GetDisplayName() == "At warehouse."))
+            { deliveryDate = deliveryDate.AddDays(2); }
 
             var orderItems = cart.GetCartItemsByUser(userId);
             foreach (var item in orderItems)
@@ -70,8 +70,43 @@
             db.Orders.Add(orderData);
             db.SaveChanges();
 
+            SubtractProductStock(userId);
+
+            ClearCart(userId);
+
             return true;
         }
 
+        public bool SubtractProductStock(string userId)
+        {
+            var orderItems = cart.GetCartItemsByUser(userId).ToList();
+
+            foreach (var item in orderItems)
+            {
+                var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+
+                product.Quantity -= item.Quantity;
+
+                db.SaveChanges();
+
+                if (product.Quantity == 0)
+                {
+                    product.Availability = ProductAvailability.OutOfStock;
+                    db.SaveChanges();
+                }
+            }
+
+            return true;
+        }
+
+        public bool ClearCart(string userId)
+        {
+            var userCart = db.UserShoppingCarts.Where(usc => usc.UserId == userId).ToList();
+
+            db.UserShoppingCarts.RemoveRange(userCart);
+            db.SaveChanges();
+
+            return true;
+        }
     }
 }

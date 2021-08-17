@@ -59,7 +59,12 @@ namespace HexiTech.Controllers
                 order.Email,
                 order.AdditionalInformation);
 
-            TempData[GlobalMessageKey] = "Your order was received! You can check your orders in your \"Orders\" tab.";
+            if (!finalized)
+            {
+                return BadRequest();
+            }
+
+            TempData[GlobalMessageKey] = "Your order was received! You can check your order details here - in your \"Orders\" tab.";
 
             return RedirectToAction(nameof(OrdersList));
         }

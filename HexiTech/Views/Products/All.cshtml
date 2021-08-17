@@ -111,7 +111,7 @@
                             <div class="outOfStock">
                                 @{
                                     if (db.UserShoppingCarts.Any(usc => usc.UserId == User.Id()) &&
-                                                                        db.UserShoppingCarts.Any(usc => usc.ProductId == product.Id && usc.Quantity == product.Quantity))
+                                                                        db.UserShoppingCarts.Any(usc => usc.ProductId == product.Id && usc.Quantity >= product.Quantity))
                                     {
                                         if (Enum.GetName(product.Availability) == "OutOfStock" || !product.IsPublic) /*A bit dumb, but just in case.*/
                                         {

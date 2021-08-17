@@ -93,7 +93,7 @@
                                 }
 
                                 if (db.UserShoppingCarts.Any(usc => usc.UserId == User.Id()) &&
-                                    db.UserShoppingCarts.Any(usc => usc.ProductId == Model.Id && usc.Quantity == Model.Quantity))
+                                    db.UserShoppingCarts.Any(usc => usc.ProductId == Model.Id && usc.Quantity >= Model.Quantity))
                                 {
                                     if (Enum.GetName(Model.Availability) == "OutOfStock" || !Model.IsPublic)
                                     {

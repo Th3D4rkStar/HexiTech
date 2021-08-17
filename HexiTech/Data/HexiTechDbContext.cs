@@ -21,6 +21,7 @@
         public DbSet<ProductReview> ProductReviews { get; init; }
 
         public DbSet<UserShoppingCart> UserShoppingCarts { get; set; }
+
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<UserOrdersList> UserOrdersLists { get; set; }

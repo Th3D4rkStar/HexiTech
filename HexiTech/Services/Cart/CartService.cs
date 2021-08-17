@@ -1,4 +1,6 @@
-﻿namespace HexiTech.Services.Cart
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace HexiTech.Services.Cart
 {
     using System.Linq;
     using System.Collections.Generic;
@@ -24,6 +26,12 @@
         {
             if (db.UserShoppingCarts.Any(usc => usc.UserId == userId && usc.ProductId == productId))
             {
+                var cartItem = db.UserShoppingCarts.Include(usc=>usc.Product)
+                    .FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId);
+
+                if (cartItem.Quantity + quantity > cartItem.Product.Quantity)
+                { return true; }
+
                 db.UserShoppingCarts
                     .FirstOrDefault(usc =>
                         usc.UserId == userId && usc.ProductId == productId)
