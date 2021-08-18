@@ -27,6 +27,11 @@
                 <p class="lead ml-n5" style="font-size: 30px; font-style: italic;">
                     Check out our latest & greatest products:
                 </p>
+                <a asp-controller="About" asp-action="About">
+                    <p class="btn badge-pill badge-info ml-n5 mt-5" style="font-size: 48px; font-style: italic; opacity: 0.95">
+                        Learn more about us.
+                    </p>
+                </a>
             </div>
         </div>
     </section>
@@ -35,7 +40,7 @@
             <div class="recently-added">
                 <h3 class="text-center" style="color: cornsilk; ">Latest product: 🆕</h3>
                 @{
-                    if (db.Products.Any(x=>x.IsPublic))
+                    if (db.Products.Any(x => x.IsPublic))
                     {
                         var latestProduct = db.Products.Where(p => p.IsPublic).OrderByDescending(p => p.Id).ToList().First();
 
