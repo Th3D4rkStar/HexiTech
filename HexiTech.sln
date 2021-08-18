@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexiTech", "HexiTech\HexiTech.csproj", "{ADBD1C2E-3C1A-4423-AEDB-CA08B6E821BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexiTech", "HexiTech\HexiTech.csproj", "{ADBD1C2E-3C1A-4423-AEDB-CA08B6E821BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexiTech.Test", "HexiTech.Test\HexiTech.Test.csproj", "{B8E5A67C-1CC9-4565-8685-FD038538AAAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{ADBD1C2E-3C1A-4423-AEDB-CA08B6E821BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADBD1C2E-3C1A-4423-AEDB-CA08B6E821BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADBD1C2E-3C1A-4423-AEDB-CA08B6E821BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8E5A67C-1CC9-4565-8685-FD038538AAAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E5A67C-1CC9-4565-8685-FD038538AAAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E5A67C-1CC9-4565-8685-FD038538AAAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E5A67C-1CC9-4565-8685-FD038538AAAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
