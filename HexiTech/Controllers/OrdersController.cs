@@ -68,8 +68,6 @@
                 order.Email,
                 order.AdditionalInformation);
 
-            orders.AddOrderToList(userId, orderId);
-
             TempData[GlobalMessageKey] = "Your order was received! You can check your order details here - in your \"Orders\" tab.";
 
             return RedirectToAction(nameof(OrdersList));

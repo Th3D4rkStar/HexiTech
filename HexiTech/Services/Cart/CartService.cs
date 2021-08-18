@@ -29,7 +29,12 @@
                     .FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId);
 
                 if (cartItem.Quantity + quantity > cartItem.Product.Quantity)
-                { return true; }
+                {
+                    cartItem.Quantity = cartItem.Product.Quantity;
+                    db.SaveChanges();
+
+                    return true;
+                }
 
                 db.UserShoppingCarts
                     .FirstOrDefault(usc =>
@@ -40,6 +45,14 @@
             }
             else
             {
+                var product = db.Products.FirstOrDefault(p => p.Id == productId);
+
+                if (quantity > product.Quantity)
+                {
+                    quantity = product.Quantity;
+                    db.SaveChanges();
+                }
+
                 db.UserShoppingCarts.Add(new UserShoppingCart
                 {
                     UserId = userId,
@@ -74,6 +87,7 @@
             => db.UserShoppingCarts
                 .Where(usc => usc.UserId == userId)
                 .OrderByDescending(usc => usc.DateAdded)
+                .Include(usc=>usc.Product)
                 .ProjectTo<CartItemServiceModel>(this.mapper)
                 .ToList();
 

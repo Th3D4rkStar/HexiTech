@@ -1,4 +1,6 @@
-﻿@model IEnumerable<HexiTech.Data.Models.Order>
+﻿@using HexiTech.Data
+@model IEnumerable<HexiTech.Data.Models.Order>
+@inject HexiTechDbContext db;
 
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -9,133 +11,98 @@
         <div class="container">
             <div class="row">
                 <h2 class="text-center"><span>My orders</span></h2>
+                <p class="text-center"><strong>Last 20 orders made:</strong></p>
                 <div class="col-md-12">
                     <div class="bd-example" data-example-id="">
                         <div id="accordion" role="tablist" aria-multiselectable="true">
-                            
                             @{
-                                var collapse = "a";
-                                foreach (var order in Model)
-                                {
-                                    collapse += "a";
+                                var strList = new List<string>
+                                                                        {
+                                    "collapse1", "collapse2", "collapse3", "collapse4", "collapse5",
+                                    "collapse6", "collapse7", "collapse8", "collapse9", "collapse10",
+                                    "collapse11", "collapse12", "collapse13", "collapse14", "collapse15",
+                                    "collapse16", "collapse17", "collapse18", "collapse19", "collapse20"
+                                };
 
+                                var orderList = Model.TakeLast(20).ToList();
+
+                                int i = 0;
+
+                                foreach (var order in orderList)
+                                {
                                     <div class="card">
                                         <div class="card-header" role="tab" id="headingOne">
                                             <div class="mb-0">
-                                                <a data-toggle="@collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                                    <h3>Order number: # </h3>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#@strList[i]" aria-expanded="false" aria-controls="@strList[i]" class="collapsed">
+                                                    <i class="fa fa-file-text-o ml-n1" aria-hidden="true"></i>
+                                                    <h3>|Order number: #@order.Id | Created on: @order.DateCreated.Split(" ")[0]|</h3>
+
+                                                    <p>
+                                                        Order made by @order.FirstName @order.LastName
+                                                        @{if (order.CompanyName != null)
+                                                            {
+                                                                @:on behalf of @order.CompanyName
+                                                            }}
+                                                        | To be delivered by @order.DeliveryDate.Split(" ")[0] at @order.Address, @order.Address2<br />
+                                                    </p>
+
+                                                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                                    <p class="mt-2 mb-n1">@order.Postcode @order.City, @order.Province province/state, @order.Country</p>
                                                 </a>
-                                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                                <i class="fa fa-angle-down" aria-hidden="true"></i>
                                             </div>
                                         </div>
 
-                                        <div id="@collapse" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
+                                        <div id="@strList[i]" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
                                             <table class="table table-striped" style="background-color: aliceblue; opacity: 0.975">
                                                 <thead class="thead-dark text-center">
-                                                <tr>
-                                                    <th scope="col">Id</th>
-                                                    <th scope="col">Brand</th>
-                                                    <th scope="col">Series</th>
-                                                    <th scope="col">Model</th>
-                                                    <th scope="col">Price</th>
-                                                    <th scope="col">Availability</th>
-                                                    <th scope="col">Quantity</th>
-                                                    <th scope="col">Type</th>
-                                                    <th scope="col">Category</th>
-                                                    <th scope="col">For sale</th>
-                                                </tr>
+                                                    <tr>
+                                                        <th scope="col">Product name</th>
+                                                        <th scope="col">Individual price</th>
+                                                        <th scope="col">Quantity</th>
+                                                        <th scope="col">Total price for product</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
+                                                    @foreach (var item in order.OrderItems)
+                                                    {
+                                                        var product = db.Products.FirstOrDefault(p => p.Id == item.ProductId);
+                                                        decimal price = item.Quantity * product.Price;
+
+                                                        <tr class="text-center">
+                                                            <td><a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id">@item.Name</a></td>
+                                                            <td>@product.Price</td>
+                                                            <td>@item.Quantity</td>
+                                                            <td>@price</td>
+                                                        </tr>
+                                                    }
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr class="text-right">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td>Shipping: $6.90</td>
+                                                    </tr>
+                                                    <tr class="text-right">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="font-weight-bold">Order total: $@order.TotalPrice</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
+                                            @if (order.AdditionalInformation != null)
+                                            {<p>Additional information:<br /> @order.AdditionalInformation</p>}
                                         </div>
                                     </div>
+                                    i++;
                                 }
                             }
-
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingTwo">
-                                    <div class="mb-0">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                            <h3>Collapsible Group Item</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                        </a>
-                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                    </div>
-                                </div>
-                                <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
-                                    <div class="card-block">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingThree">
-                                    <div class="mb-0">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                            <h3>Collapsible Group Item</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                        </a>
-                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                    </div>
-                                </div>
-                                <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" aria-expanded="false">
-                                    <div class="card-block">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingOne">
-                                    <div class="mb-0">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                            <h3>Collapsible Group Item</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                        </a>
-                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                    </div>
-                                </div>
-
-                                <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="">
-                                    <div class="card-block">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header" role="tab" id="headingTwo">
-                                    <div class="mb-0">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-                                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                                            <h3>Collapsible Group Item</h3>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-                                        </a>
-                                        <i class="fa fa-angle-right" aria-hidden="true"></i>
-                                    </div>
-                                </div>
-                                <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false">
-                                    <div class="card-block">
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

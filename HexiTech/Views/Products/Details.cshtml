@@ -135,7 +135,7 @@
                     </div>
                     <div class="row text-center col-12">
                         <div class="reviews_product p-3 mt-3 ml-2 col-7">
-                            <a href="#reviews">@Model.ProductReviews.Count review(s)</a> |
+                            <a href="#reviews">@Model.ProductReviews.Count review(s)</a>
                             @{
                                 if (Model.ProductReviews.Any())
                                 {
@@ -281,7 +281,7 @@
     <!-- Write a Review -->
     <div class="col-12" id="writeReview">
         <form method="post">
-            <button type="button" id="btn1" class="btn btn-outline-primary col-12" data-toggle="modal" data-target="#form"> Write a review for this product </button>
+            <button type="button" id="btn1" class="btn btn-primary col-12" data-toggle="modal" data-target="#form"> Write a review for this product </button>
             <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">

@@ -12,8 +12,6 @@
 
         public bool ClearCart(string userId);
 
-        public bool AddOrderToList(string userId, int orderId);
-
         public IEnumerable<Order> GetUserOrders(string userId);
     }
 }

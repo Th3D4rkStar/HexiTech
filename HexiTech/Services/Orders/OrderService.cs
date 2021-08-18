@@ -5,7 +5,6 @@
     using System.Collections.Generic;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
-    using AutoMapper.QueryableExtensions;
 
     using Data;
     using Cart;
@@ -41,7 +40,8 @@
                 deliveryDate = deliveryDate.AddDays(2);
             }
 
-            var orderItems = cart.GetCartItemsByUser(userId);
+            var orderItems = cart.GetCartItemsByUser(userId).ToList();
+
             foreach (var item in orderItems)
             {
                 item.Name = item.Product.Series != null
@@ -51,12 +51,13 @@
 
             var orderData = new Order
             {
+                UserId = userId,
                 DateCreated = DateTime.UtcNow.ToString(),
                 OrderItems = orderItems,
                 TotalPrice = db.UserShoppingCarts
                     .Where(usc => usc.UserId == userId)
                     .Include(usc => usc.Product)
-                    .ToList().Sum(usc => usc.Product.Price) + 6.90M,
+                    .ToList().Sum(usc => usc.Product.Price * usc.Quantity) + 6.90M,
                 DeliveryDate = deliveryDate.ToString(),
                 IsFulfilled = false,
                 FirstName = firstName,
@@ -115,24 +116,11 @@
             return true;
         }
 
-        public bool AddOrderToList(string userId, int orderId)
-        {
-            db.UserOrdersLists.Add(new UserOrdersList
-            {
-                UserId = userId,
-                OrderId = orderId
-            });
-
-            db.SaveChanges();
-
-            return true;
-        }
-
         public IEnumerable<Order> GetUserOrders(string userId)
-            => db.UserOrdersLists
-                .Where(uol => uol.UserId == userId)
-                .OrderByDescending(uol => uol.DateAdded)
-                .ProjectTo<Order>(this.mapper)
+            => db.Orders
+                .Where(o => o.UserId == userId)
+                .OrderByDescending(o => o.DateCreated)
+                .Include(o=>o.OrderItems)
                 .ToList();
     }
 }

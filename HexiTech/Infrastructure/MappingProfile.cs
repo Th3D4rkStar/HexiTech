@@ -16,7 +16,6 @@
 
             this.CreateMap<ProductDetailsServiceModel, ProductFormModel>();
             this.CreateMap<UserShoppingCart, CartItemServiceModel>();
-            this.CreateMap<UserOrdersList, Order>();
 
 
               this.CreateMap<Product, ProductServiceModel>()

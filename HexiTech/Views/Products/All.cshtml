@@ -115,6 +115,8 @@
                                     {
                                         if (Enum.GetName(product.Availability) == "OutOfStock" || !product.IsPublic) /*A bit dumb, but just in case.*/
                                         {
+                                            @:(Out of stock)
+
                                             <a href="" class="btn btn-success btn-lg btn-block mt-2 mb-n3 disabled">
                                                 <i class="fa fa-shopping-cart"></i> Add To Cart
                                             </a>
@@ -130,6 +132,8 @@
                                     {
                                         if (Enum.GetName(product.Availability) == "OutOfStock" || !product.IsPublic) /*A bit dumb, but just in case.*/
                                         {
+                                            @:(Out of stock)
+
                                             <a href="" class="btn btn-success btn-lg btn-block mt-2 mb-n3 disabled">
                                                 <i class="fa fa-shopping-cart"></i> Add To Cart
                                             </a>

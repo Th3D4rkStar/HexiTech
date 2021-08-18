@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HexiTech.Migrations
 {
     [DbContext(typeof(HexiTechDbContext))]
-    [Migration("20210817165407_InitialSetup")]
+    [Migration("20210818090209_InitialSetup")]
     partial class InitialSetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,7 +104,12 @@ namespace HexiTech.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(6,2)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -294,21 +299,6 @@ namespace HexiTech.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("HexiTech.Data.Models.UserOrdersList", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "OrderId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("UserOrdersLists");
-                });
-
             modelBuilder.Entity("HexiTech.Data.Models.UserShoppingCart", b =>
                 {
                     b.Property<string>("UserId")
@@ -494,6 +484,15 @@ namespace HexiTech.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("HexiTech.Data.Models.Order", b =>
+                {
+                    b.HasOne("HexiTech.Data.Models.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("HexiTech.Data.Models.Product", b =>
                 {
                     b.HasOne("HexiTech.Data.Models.Category", "Category")
@@ -533,25 +532,6 @@ namespace HexiTech.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("HexiTech.Data.Models.UserOrdersList", b =>
-                {
-                    b.HasOne("HexiTech.Data.Models.Order", "Order")
-                        .WithMany("UserOrdersLists")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HexiTech.Data.Models.User", "User")
-                        .WithMany("UserOrdersLists")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HexiTech.Data.Models.UserShoppingCart", b =>
@@ -649,8 +629,6 @@ namespace HexiTech.Migrations
             modelBuilder.Entity("HexiTech.Data.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
-
-                    b.Navigation("UserOrdersLists");
                 });
 
             modelBuilder.Entity("HexiTech.Data.Models.Product", b =>
@@ -667,7 +645,7 @@ namespace HexiTech.Migrations
 
             modelBuilder.Entity("HexiTech.Data.Models.User", b =>
                 {
-                    b.Navigation("UserOrdersLists");
+                    b.Navigation("Orders");
 
                     b.Navigation("UsersShoppingCart");
                 });

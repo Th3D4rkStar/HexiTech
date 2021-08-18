@@ -10,6 +10,9 @@
     {
         public int Id { get; set; }
 
+        public string UserId { get; set; }
+        public User User { get; set; }
+
         [Required]
         public string DateCreated { get; set; }
 
@@ -56,7 +59,5 @@
         public string Email { get; set; }
 
         public string AdditionalInformation { get; set; }
-
-        public IEnumerable<UserOrdersList> UserOrdersLists { get; set; } = new List<UserOrdersList>();
     }
 }

@@ -46,10 +46,16 @@
                     @{
                         if (SignInManager.IsSignedIn(User))
                         {
-                            <a class="btn btn-success btn-sm ml-3" asp-area="" asp-controller="Cart" asp-action="Cart">
-                                <i class="fa fa-shopping-cart"></i> My cart
-                                <span class="badge badge-light">@cart.Count(User.Id())</span>
+                            <a class="btn btn-secondary btn-sm ml-1 mr-1" asp-area="" asp-controller="Orders" asp-action="OrdersList">
+                                <i class="fa fa-file-text-o" aria-hidden="true"></i> My orders
                             </a>
+
+                            <p class="nav-item mt-n3 mb-n3 ml-2 badge-pill badge-success">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Cart" asp-action="Cart">
+                                    <i class="fa fa-shopping-cart"></i> My cart
+                                    <span class="badge badge-light">@cart.Count(User.Id())</span>
+                                </a>
+                            </p>
                         }
                         else
                         {

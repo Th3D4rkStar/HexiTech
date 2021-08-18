@@ -24,8 +24,6 @@
 
         public DbSet<Order> Orders { get; set; }
 
-        public DbSet<UserOrdersList> UserOrdersLists { get; set; }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
@@ -66,8 +64,10 @@
                 .HasKey(usc => new { usc.UserId, usc.ProductId });
 
             builder
-                .Entity<UserOrdersList>()
-                .HasKey(uol => new { uol.UserId, uol.OrderId });
+                .Entity<Order>()
+                .HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId);
 
             base.OnModelCreating(builder);
         }

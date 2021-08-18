@@ -13,6 +13,6 @@
 
         public IEnumerable<UserShoppingCart> UsersShoppingCart { get; set; } = new List<UserShoppingCart>();
 
-        public IEnumerable<UserOrdersList> UserOrdersLists { get; set; } = new List<UserOrdersList>();
+        public IEnumerable<Order> Orders { get; set; } = new List<Order>();
     }
 }
