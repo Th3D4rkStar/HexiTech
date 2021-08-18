@@ -26,116 +26,116 @@
                         </div>
                         <div class="col-8 mt-2">
                             @if (db.UserShoppingCarts.ToList()
-                                .Any(usc => usc.UserId == User.Id()
-                                            && usc.Product.Availability.GetDisplayName() == "At warehouse."))
+                               .Any(usc => usc.UserId == User.Id()
+                                           && usc.Product.Availability.GetDisplayName() == "At warehouse."))
                             {
                                 <h5 class="mt-3 text-center" style="color: #ffc107">
                                     There appear to be items in your cart which are only in stock at our warehouse.
-                                    This may result in longer delivery time.<br/>Proceed to checkout for further details.
+                                    This may result in longer delivery time.<br />Proceed to checkout for further details.
                                 </h5>
                             }
                         </div>
                     </div>
                     <thead>
-                    <tr>
-                        <th scope="col"> </th>
-                        <th scope="col" class="text-left">Product</th>
-                        <th scope="col" class="text-left">Available</th>
-                        <th scope="col" class="text-center">Quantity</th>
-                        <th scope="col" class="text-right">Individual price</th>
-                        <th scope="col" class="text-right">Price for all</th>
-                        <th> </th>
-                    </tr>
+                        <tr>
+                            <th scope="col"> </th>
+                            <th scope="col" class="text-left">Product</th>
+                            <th scope="col" class="text-left">Available</th>
+                            <th scope="col" class="text-center">Quantity</th>
+                            <th scope="col" class="text-right">Individual price</th>
+                            <th scope="col" class="text-right">Price for all</th>
+                            <th> </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @{
-                        decimal totalPrice = 0;
-                        decimal total = 0;
-                        foreach (var item in Model)
-                        {
-                            decimal priceForAll = item.Product.Price * item.Quantity;
-                            <tr>
-                                <td class="text-left">
-                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
-                                        <img src=@item.Product.ImageUrl width="50" height="50"/>
-                                    </a>
-                                </td>
-                                <td class="text-left">
-                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
-                                        @item.Name
-                                    </a>
-                                </td>
-                                <td class="text-left">@item.Product.Availability.GetDisplayName()</td>
-                                <td class="text-center">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <a asp-controller="Cart" asp-action="DecreaseQuantity" asp-route-id="@item.ProductId">
-                                                <button type="button" class="btn btn-danger btn-number" data-type="minus" data-field="">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </a>
+                        @{
+                            decimal totalPrice = 0;
+                            decimal total = 0;
+                            foreach (var item in Model)
+                            {
+                                decimal priceForAll = item.Product.Price * item.Quantity;
+                                <tr>
+                                    <td class="text-left">
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
+                                            <img src=@item.Product.ImageUrl width="50" height="50" />
+                                        </a>
+                                    </td>
+                                    <td class="text-left">
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.ProductId">
+                                            @item.Name
+                                        </a>
+                                    </td>
+                                    <td class="text-left">@item.Product.Availability.GetDisplayName()</td>
+                                    <td class="text-center">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <a asp-controller="Cart" asp-action="DecreaseQuantity" asp-route-id="@item.ProductId">
+                                                    <button type="button" class="btn btn-danger btn-number" data-type="minus" data-field="">
+                                                        <i class="fa fa-minus"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
+
+                                            <input type="number" class="form-control text-center" id="quantity" name="quantity" min="1" max="100" value="@item.Quantity">
+
+                                            <div class="input-group-append">
+                                                <a asp-controller="Cart" asp-action="IncreaseQuantity" asp-route-id="@item.ProductId">
+                                                    <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
                                         </div>
 
-                                        <input type="number" class="form-control text-center" id="quantity" name="quantity" min="1" max="100" value="@item.Quantity">
-
-                                        <div class="input-group-append">
-                                            <a asp-controller="Cart" asp-action="IncreaseQuantity" asp-route-id="@item.ProductId">
-                                                <button type="button" class="btn btn-success btn-number" data-type="plus" data-field="">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <p class="text-right font-weight-bold mt-n3 mb-n3">Max: @item.Product.Quantity</p>
-                                </td>
-                                <td class="text-right">$@item.Product.Price</td>
-                                <td class="text-right">$@priceForAll</td>
-                                <td class="text-center">
-                                    <a asp-controller="Cart" asp-action="RemoveItem" asp-route-id="@item.ProductId">
-                                        <button class="btn btn-danger mt-1"><i class="fa fa-trash"></i></button>
-                                    </a>
-                                </td>
-                            </tr>
-                            totalPrice += item.Product.Price * item.Quantity;
-                        }}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="font-weight-bold"><strong>Details:</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Sub-Total:</td>
-                        <td class="text-right">$@totalPrice</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Shipping:</td>
-                        <td class="text-right">$6.90</td>
-                    </tr>
-                    @{total = totalPrice + 6.90M;}
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><strong>Total:</strong></td>
-                        <td class="text-right"><strong>$@total</strong></td>
-                    </tr>
+                                        <p class="text-right font-weight-bold mt-n3 mb-n3">Max: @item.Product.Quantity</p>
+                                    </td>
+                                    <td class="text-right">$@item.Product.Price</td>
+                                    <td class="text-right">$@priceForAll</td>
+                                    <td class="text-center">
+                                        <a asp-controller="Cart" asp-action="RemoveItem" asp-route-id="@item.ProductId">
+                                            <button class="btn btn-danger mt-1"><i class="fa fa-trash"></i></button>
+                                        </a>
+                                    </td>
+                                </tr>
+                                totalPrice += item.Product.Price * item.Quantity;
+                            }}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td class="font-weight-bold"><strong>Details:</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Sub-Total:</td>
+                            <td class="text-right">$@totalPrice</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Shipping:</td>
+                            <td class="text-right">$6.90</td>
+                        </tr>
+                        @{total = totalPrice + 6.90M;}
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><strong>Total:</strong></td>
+                            <td class="text-right"><strong>$@total</strong></td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="col mb-2">

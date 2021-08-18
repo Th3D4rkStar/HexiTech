@@ -16,9 +16,10 @@
 
             this.CreateMap<ProductDetailsServiceModel, ProductFormModel>();
             this.CreateMap<UserShoppingCart, CartItemServiceModel>();
+            this.CreateMap<UserOrdersList, Order>();
 
 
-            this.CreateMap<Product, ProductServiceModel>()
+              this.CreateMap<Product, ProductServiceModel>()
               .ForMember(p => p.CategoryName, cfg => cfg.MapFrom(p => p.Category.Name));
 
             this.CreateMap<Product, ProductDetailsServiceModel>()

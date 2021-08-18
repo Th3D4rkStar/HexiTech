@@ -1,1 +1,23 @@
-﻿
+﻿@model IEnumerable<HexiTech.Data.Models.Order>
+
+@{
+    ViewData["Title"] = "My orders";
+}
+
+<body>
+    <div id="wrapper">
+        @{ if (Model == null || !Model.Any())
+            {
+                <h1 class="jumbotron text-center" style="">My orders</h1>
+
+                <h1 class="jumbotron text-center">
+                    <strong>There are no orders to show yet.</strong><br />
+                    <a asp-action="All" asp-controller="Products">Browse our products.</a>
+                </h1>
+            }
+            else
+            {
+                <partial name="_OrdersListWithOrders" model="@Model" />
+            } }
+    </div>
+</body>

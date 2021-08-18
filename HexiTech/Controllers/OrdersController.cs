@@ -1,13 +1,13 @@
-﻿using HexiTech.Infrastructure.Extensions;
-
-namespace HexiTech.Controllers
+﻿namespace HexiTech.Controllers
 {
+    using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
 
     using Data;
     using Models.Orders;
     using Services.Orders;
+    using Infrastructure.Extensions;
 
     using static WebConstants;
 
@@ -25,7 +25,16 @@ namespace HexiTech.Controllers
         [Authorize]
         public ActionResult OrdersList()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+            {
+                RedirectToAction();
+            }
+
+            var userId = User.Id();
+
+            var orderItems = orders.GetUserOrders(userId).ToList();
+
+            return View(orderItems);
         }
 
         [Authorize]
@@ -45,7 +54,7 @@ namespace HexiTech.Controllers
 
             var userId = User.Id();
 
-            var finalized = this.orders.Finalize(userId,
+            var orderId = this.orders.Finalize(userId,
                 order.FirstName,
                 order.LastName,
                 order.CompanyName,
@@ -59,10 +68,7 @@ namespace HexiTech.Controllers
                 order.Email,
                 order.AdditionalInformation);
 
-            if (!finalized)
-            {
-                return BadRequest();
-            }
+            orders.AddOrderToList(userId, orderId);
 
             TempData[GlobalMessageKey] = "Your order was received! You can check your order details here - in your \"Orders\" tab.";
 

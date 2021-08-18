@@ -2,8 +2,10 @@
 {
     using System;
     using System.Linq;
+    using System.Collections.Generic;
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
+    using AutoMapper.QueryableExtensions;
 
     using Data;
     using Cart;
@@ -23,8 +25,10 @@
             this.mapper = mapper.ConfigurationProvider;
         }
 
-        public bool Finalize(string userId, string firstName, string lastName, string companyName, string country, string postCode, string city,
-            string province, string address, string address2, string phoneNumber, string email, string additionalInformation)
+        public int Finalize(string userId, string firstName, string lastName, string companyName, string country,
+            string postCode, string city,
+            string province, string address, string address2, string phoneNumber, string email,
+            string additionalInformation)
         {
             var deliveryDate = DateTime.UtcNow.AddDays(3);
             var list = db.UserShoppingCarts
@@ -33,7 +37,9 @@
                 .ToList();
 
             if (list.Any(usc => usc.Product.Availability.GetDisplayName() == "At warehouse."))
-            { deliveryDate = deliveryDate.AddDays(2); }
+            {
+                deliveryDate = deliveryDate.AddDays(2);
+            }
 
             var orderItems = cart.GetCartItemsByUser(userId);
             foreach (var item in orderItems)
@@ -74,7 +80,7 @@
 
             ClearCart(userId);
 
-            return true;
+            return orderData.Id;
         }
 
         public bool SubtractProductStock(string userId)
@@ -108,5 +114,25 @@
 
             return true;
         }
+
+        public bool AddOrderToList(string userId, int orderId)
+        {
+            db.UserOrdersLists.Add(new UserOrdersList
+            {
+                UserId = userId,
+                OrderId = orderId
+            });
+
+            db.SaveChanges();
+
+            return true;
+        }
+
+        public IEnumerable<Order> GetUserOrders(string userId)
+            => db.UserOrdersLists
+                .Where(uol => uol.UserId == userId)
+                .OrderByDescending(uol => uol.DateAdded)
+                .ProjectTo<Order>(this.mapper)
+                .ToList();
     }
 }

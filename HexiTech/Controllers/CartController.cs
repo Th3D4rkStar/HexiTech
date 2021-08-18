@@ -1,12 +1,13 @@
 ﻿namespace HexiTech.Controllers
 {
+    using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Authorization;
 
-    using Infrastructure.Extensions;
-    using Services.Products;
-    using Services.Cart;
     using Data;
+    using Services.Cart;
+    using Services.Products;
+    using Infrastructure.Extensions;
 
     public class CartController : Controller
     {
@@ -29,7 +30,7 @@
                 RedirectToAction();
             }
 
-            var cartItems = this.cart.GetCartItemsByUser(User.Id());
+            var cartItems = this.cart.GetCartItemsByUser(User.Id()).ToList();
 
             foreach (var item in cartItems)
             {
@@ -82,7 +83,7 @@
 
             return RedirectToAction(nameof(Cart));
         }
-        
+
         [Authorize]
         public IActionResult DecreaseQuantity(int id)
         {

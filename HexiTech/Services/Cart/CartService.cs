@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace HexiTech.Services.Cart
+﻿namespace HexiTech.Services.Cart
 {
     using System.Linq;
     using System.Collections.Generic;
+    using Microsoft.EntityFrameworkCore;
     using AutoMapper;
     using AutoMapper.QueryableExtensions;
 
@@ -26,7 +25,7 @@ namespace HexiTech.Services.Cart
         {
             if (db.UserShoppingCarts.Any(usc => usc.UserId == userId && usc.ProductId == productId))
             {
-                var cartItem = db.UserShoppingCarts.Include(usc=>usc.Product)
+                var cartItem = db.UserShoppingCarts.Include(usc => usc.Product)
                     .FirstOrDefault(usc => usc.UserId == userId && usc.ProductId == productId);
 
                 if (cartItem.Quantity + quantity > cartItem.Product.Quantity)
@@ -41,7 +40,7 @@ namespace HexiTech.Services.Cart
             }
             else
             {
-                db.UserShoppingCarts.Add(new UserShoppingCart()
+                db.UserShoppingCarts.Add(new UserShoppingCart
                 {
                     UserId = userId,
                     ProductId = productId,
@@ -50,7 +49,6 @@ namespace HexiTech.Services.Cart
 
                 db.SaveChanges();
             }
-
 
             return true;
         }
