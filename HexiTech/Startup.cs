@@ -1,20 +1,21 @@
-using HexiTech.Services.Cart;
-using HexiTech.Services.Orders;
-
 namespace HexiTech
 {
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
+
+    using Data;
+    using Services.Cart;
+    using Services.Orders;
+    using Services.Products;
     using HexiTech.Data.Models;
     using Infrastructure.Extensions;
-    using Microsoft.AspNetCore.Mvc;
-    using Data;
-    using Services.Products;
 
     public class Startup
     {
@@ -25,6 +26,15 @@ namespace HexiTech
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential 
+                // cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                // requires using Microsoft.AspNetCore.Http;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services.AddDbContext<HexiTechDbContext>(options =>
                 options.UseSqlServer(DatabaseConfiguration.ConnectionString));
 
@@ -74,6 +84,7 @@ namespace HexiTech
 
             app.UseHttpsRedirection()
                 .UseStaticFiles()
+                .UseCookiePolicy()
                 .UseSession()
                 .UseRouting()
                 .UseAuthentication()

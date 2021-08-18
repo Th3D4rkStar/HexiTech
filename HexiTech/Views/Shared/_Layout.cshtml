@@ -19,56 +19,57 @@
     <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hexi-Tech</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hexi-Tech</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="All">All Products</a>
+                    </li>
+                    @if (User.IsAdmin())
+                    {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Add">Add a product</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="All">All Products</a>
-                        </li>
-                        @if (User.IsAdmin())
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Add">Add a product</a>
-                            </li>
-                        }
-                    </ul>
-                    <partial name="_LoginPartial" />
-                    @{
-                        if (SignInManager.IsSignedIn(User))
-                        {
-                            <a class="btn btn-secondary btn-sm ml-1 mr-1" asp-area="" asp-controller="Orders" asp-action="OrdersList">
-                                <i class="fa fa-file-text-o" aria-hidden="true"></i> My orders
-                            </a>
-
-                            <p class="nav-item mt-n3 mb-n3 ml-2 badge-pill badge-success">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Cart" asp-action="Cart">
-                                    <i class="fa fa-shopping-cart"></i> My cart
-                                    <span class="badge badge-light">@cart.Count(User.Id())</span>
-                                </a>
-                            </p>
-                        }
-                        else
-                        {
-                            <a class="btn btn-success btn-sm ml-3" asp-area="Identity" asp-page="/Account/Login">
-                                <i class="fa fa-shopping-cart"></i> My cart
-                            </a>
-                        }
                     }
-                </div>
+                </ul>
+                <partial name="_LoginPartial" />
+                @{
+                    if (SignInManager.IsSignedIn(User))
+                    {
+                        <a class="btn btn-secondary btn-sm ml-1 mr-1" asp-area="" asp-controller="Orders" asp-action="OrdersList">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i> My orders
+                        </a>
+
+                        <p class="nav-item mt-n3 mb-n3 ml-2 badge-pill badge-success">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Cart" asp-action="Cart">
+                                <i class="fa fa-shopping-cart"></i> My cart
+                                <span class="badge badge-light">@cart.Count(User.Id())</span>
+                            </a>
+                        </p>
+                    }
+                    else
+                    {
+                        <a class="btn btn-success btn-sm ml-3" asp-area="Identity" asp-page="/Account/Login">
+                            <i class="fa fa-shopping-cart"></i> My cart
+                        </a>
+                    }
+                }
             </div>
-        </nav>
-    </header>
-    <div class="container">
+        </div>
+    </nav>
+</header>
+<div class="container">
+<partial name="_CookieConsentPartial" />
         @{
             if (TempData.ContainsKey(WebConstants.GlobalMessageKey))
             {
