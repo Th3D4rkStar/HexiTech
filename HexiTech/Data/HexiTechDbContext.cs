@@ -24,6 +24,8 @@
 
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Feedback> Feedbacks { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder

@@ -1,0 +1,63 @@
+﻿@model IEnumerable<HexiTech.Data.Models.Feedback>
+
+@{
+    ViewBag.Title = "Client feedback";
+}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet " href="~/css/ProductDeletion.css" />
+
+<h1 class="text-center">Client feedback</h1>
+
+<table class="table table-striped" style="background-color: aliceblue; opacity: 0.975">
+    <thead class="thead-dark text-center">
+
+        <tr>
+            <th scope="col" class="text-center">Name</th>
+            <th scope="col" class="text-center">E-Mail</th>
+            <th scope="col" class="text-center">Message</th>
+            <th scope="col" class="text-center">Options</th>
+        </tr>
+    </thead>
+
+    <tbody class="text-center">
+        @foreach (var feedback in Model)
+        {
+            <tr>
+                <td>@feedback.Name</td>
+                <td>@feedback.Email</td>
+                <td>@feedback.Message</td>
+                <td>
+                    @{ var deleteModal = "deleteModal" + feedback.Id; }
+                    <button type="button" class="btn btn-danger ml-3 mt-3" data-toggle="modal" data-target="#@deleteModal">Delete</button>
+                    <a class="btn btn-warning ml-3 mt-3">Respond</a>
+                </td>
+            </tr>
+
+            <!-- Confirm Delete Modal -->
+            <div id="@deleteModal" class="modal fade">
+                <div class="modal-dialog modal-confirm">
+                    <div class="modal-content">
+                        <div class="modal-header flex-column">
+                            <div class="icon-box">
+                                <i class="material-icons">&#xE5CD;</i>
+                            </div>
+                            <h4 class="modal-title w-100">Are you sure?</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete this message?</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <form asp-area="Admin" asp-controller="About" asp-action="Delete" asp-route-id="@feedback.Id">
+                                <input type="submit" class="btn btn-danger" value="Delete!">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </tbody>
+</table>
+<hr />

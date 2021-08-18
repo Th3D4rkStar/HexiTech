@@ -1,16 +1,16 @@
 ﻿namespace HexiTech.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.AspNetCore.Authorization;
+    using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
     using AutoMapper;
 
-    using HexiTech.Services.Products.Models;
-    using Infrastructure.Extensions;
-    using Services.Products;
-    using Models.Products;
     using Data;
+    using Models.Products;
+    using Services.Products;
+    using Infrastructure.Extensions;
+    using HexiTech.Services.Products.Models;
     
     using static WebConstants;
     

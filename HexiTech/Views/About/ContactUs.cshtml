@@ -1,1 +1,62 @@
-﻿
+﻿@model HexiTech.Data.Models.Feedback
+
+@{ ViewData["Title"] = "Contact us"; }
+
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<section class="jumbotron text-center">
+    <div class="container">
+        <h1 class="jumbotron-heading">Get in touch with us.</h1>
+        <p class="lead text-muted mb-0">Send us a message regarding an issue, or a recommendation on what we should improve!</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <i class="fa fa-envelope"></i> Contact us.
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="form-group">
+                            <label asp-for="Name">Name:</label>
+                            <input asp-for="Name" type="text" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter name" required>
+                            <span asp-validation-for="Name" class="small text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email">Email address:</label>
+                            <input asp-for="Email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                            <span asp-validation-for="Name" class="small text-danger"></span>
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Message">Message:</label>
+                            <textarea asp-for="Message" class="form-control" id="message" rows="6" required></textarea>
+                            <span asp-validation-for="Name" class="small text-danger"></span>
+                        </div>
+                        <div class="mx-auto">
+                            <button type="submit" class="btn btn-primary text-right">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="card bg-light mb-3">
+                <div class="card-header bg-success text-white text-uppercase"><i class="fa fa-home"></i> Address</div>
+                <div class="card-body">
+                    <p>#5 Example Str. Apt #43</p>
+                    <p>1000 Sofia</p>
+                    <p>Bulgaria</p>
+                    <p>Email: support@hexitech.com</p>
+                    <p>Tel. +XXX 123 456 789</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

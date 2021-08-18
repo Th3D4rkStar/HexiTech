@@ -1,7 +1,8 @@
 ﻿namespace HexiTech.Areas.Admin.Controllers
 {
-    using Services.Products;
     using Microsoft.AspNetCore.Mvc;
+
+    using Services.Products;
 
     using static WebConstants;
 
